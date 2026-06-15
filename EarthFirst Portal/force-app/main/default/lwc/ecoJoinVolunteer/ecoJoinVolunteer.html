@@ -1,0 +1,202 @@
+<template>
+    <div class="wrapper">
+
+        <div class="form-header">
+            <div class="header-icon">🌿</div>
+            <div>
+                <h1 class="form-title">Join as a Volunteer</h1>
+                <p class="form-subtitle">Be part of the change — help your community go green</p>
+            </div>
+        </div>
+
+        <template if:true={isChecking}>
+            <div class="state-card">
+                <lightning-spinner alternative-text="Checking status" size="medium"></lightning-spinner>
+                <p class="state-msg">Checking your volunteer status...</p>
+            </div>
+        </template>
+
+        <template if:true={hasLoadError}>
+            <div class="state-card">
+                <div class="state-icon">⚠️</div>
+                <p class="state-msg">{loadErrorMessage}</p>
+            </div>
+        </template>
+
+        <!-- already registered -->
+        <template if:true={isAlreadyVolunteer}>
+            <div class="success-card">
+                <div class="success-icon">🏅</div>
+                <h2 class="success-title">Application Already Submitted</h2>
+                <p class="success-message">
+                    <template if:true={isActiveVolunteer}>
+                        You have an active volunteer profile with EcoConnect.
+                        Head to the Initiatives page to join upcoming green campaigns.
+                    </template>
+                    <template if:false={isActiveVolunteer}>
+                        Your volunteer application is under review by a City Officer.
+                        You will be notified once your profile is activated.
+                    </template>
+                </p>
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    Status: {volunteerStatus}
+                </div>
+            </div>
+        </template>
+
+        <!-- success screen after submission -->
+        <template if:true={isSubmitted}>
+            <div class="success-card">
+                <div class="success-icon">🎉</div>
+                <h2 class="success-title">Registration Submitted!</h2>
+                <p class="success-message">
+                    Your volunteer application has been submitted successfully.
+                    A City Officer will review and activate your profile within
+                    1–2 working days. You'll be notified once approved.
+                </p>
+                <div class="vol-id-box">
+                    <span class="vol-id-label">Volunteer ID</span>
+                    <span class="vol-id-value">{submittedVolunteerId}</span>
+                </div>
+            </div>
+        </template>
+
+        <!-- registration form -->
+        <template if:true={showForm}>
+            <div class="form-card">
+
+                <div class="progress-bar-track">
+                    <div class="progress-step">
+                        <div class={stepCircle1}><span>1</span></div>
+                        <span class="step-label">Skills & Availability</span>
+                    </div>
+                    <div class={progressLine}></div>
+                    <div class="progress-step">
+                        <div class={stepCircle2}><span>2</span></div>
+                        <span class="step-label">Emergency Contact</span>
+                    </div>
+                </div>
+
+                <!-- step 1 -->
+                <template if:true={isStep1}>
+                    <div class="step-body">
+
+                        <div class="field-group">
+                            <label class="field-label">Your Skills <span class="required">*</span></label>
+                            <p class="field-hint">Select all that apply</p>
+                            <div class="skills-grid">
+                                <template for:each={skillOptions} for:item="skill">
+                                    <button key={skill.value} class={skill.cssClass}
+                                        data-value={skill.value} onclick={handleSkillClick}>
+                                        <span class="skill-icon">{skill.icon}</span>
+                                        <span class="skill-label">{skill.label}</span>
+                                    </button>
+                                </template>
+                            </div>
+                            <template if:true={skillsError}>
+                                <span class="field-error">{skillsError}</span>
+                            </template>
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label">Availability <span class="required">*</span></label>
+                            <div class="avail-grid">
+                                <template for:each={availabilityOptions} for:item="avail">
+                                    <button key={avail.value} class={avail.cssClass}
+                                        data-value={avail.value} onclick={handleAvailabilityClick}>
+                                        <span class="avail-icon">{avail.icon}</span>
+                                        <span class="avail-label">{avail.label}</span>
+                                        <span class="avail-desc">{avail.desc}</span>
+                                    </button>
+                                </template>
+                            </div>
+                            <template if:true={availabilityError}>
+                                <span class="field-error">{availabilityError}</span>
+                            </template>
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label">T-Shirt Size</label>
+                            <div class="tshirt-grid">
+                                <template for:each={tshirtOptions} for:item="size">
+                                    <button key={size.value} class={size.cssClass}
+                                        data-value={size.value} onclick={handleTshirtClick}>
+                                        {size.label}
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+
+                        <div class="step-actions">
+                            <button class="btn-primary" onclick={handleStep1Next}>Continue →</button>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- step 2 -->
+                <template if:true={isStep2}>
+                    <div class="step-body">
+
+                        <div class="info-banner">
+                            ℹ️ Emergency contact details help us reach someone in case of an incident during an initiative.
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label">Emergency Contact Name</label>
+                            <input type="text" class="field-input"
+                                placeholder="e.g. Ravi Kumar"
+                                value={emergencyName}
+                                maxlength="100"
+                                onchange={handleEmergencyNameChange} />
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label">Emergency Contact Phone</label>
+                            <input type="tel" class={emergencyPhoneClass}
+                                placeholder="e.g. 9876543210"
+                                value={emergencyPhone}
+                                maxlength="15"
+                                onchange={handleEmergencyPhoneChange} />
+                            <template if:true={emergencyPhoneError}>
+                                <span class="field-error">{emergencyPhoneError}</span>
+                            </template>
+                        </div>
+
+                        <!-- review summary before submitting -->
+                        <div class="review-box">
+                            <p class="review-title">📋 Review Before Submitting</p>
+                            <div class="review-row">
+                                <span class="review-key">Skills</span>
+                                <span class="review-val">{selectedSkillsDisplay}</span>
+                            </div>
+                            <div class="review-row">
+                                <span class="review-key">Availability</span>
+                                <span class="review-val">{availability}</span>
+                            </div>
+                            <div class="review-row">
+                                <span class="review-key">T-Shirt</span>
+                                <span class="review-val">{tShirtSize}</span>
+                            </div>
+                        </div>
+
+                        <template if:true={hasError}>
+                            <div class="error-banner">⚠️ {errorMessage}</div>
+                        </template>
+
+                        <div class="step-actions step-actions-two">
+                            <button class="btn-secondary" onclick={handleBack}>← Back</button>
+                            <button class="btn-primary" onclick={handleSubmit} disabled={isSubmitting}>
+                                <template if:true={isSubmitting}>Registering...</template>
+                                <template if:false={isSubmitting}>🌿 Register as Volunteer</template>
+                            </button>
+                        </div>
+
+                    </div>
+                </template>
+
+            </div>
+        </template>
+
+    </div>
+</template>

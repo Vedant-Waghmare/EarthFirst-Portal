@@ -1,0 +1,111 @@
+<template>
+    <div class="leaderboard-wrapper">
+
+        <div class="lb-header">
+            <h2 class="lb-title">🏆 Volunteer Leaderboard</h2>
+            <p class="lb-subtitle">Top volunteers ranked by their contribution points</p>
+        </div>
+
+        <!-- tier legend -->
+        <div class="tier-legend">
+            <span class="tier-pill tier-starter">🌱 Starter: 0–99 pts</span>
+            <span class="tier-pill tier-explorer">🧭 Explorer: 100–299 pts</span>
+            <span class="tier-pill tier-achiever">🏆 Achiever: 300–699 pts</span>
+            <span class="tier-pill tier-legend-pill">🌟 Legend: 700+ pts</span>
+        </div>
+
+        <template if:true={isLoading}>
+            <div class="spinner-container">
+                <lightning-spinner alternative-text="Loading leaderboard" size="medium" variant="brand"></lightning-spinner>
+            </div>
+        </template>
+
+        <template if:true={hasError}>
+            <div class="error-box">⚠️ &nbsp;{errorMessage}</div>
+        </template>
+
+        <template if:true={isEmpty}>
+            <div class="empty-box">
+                <p class="empty-title">No volunteers on the leaderboard yet.</p>
+                <p class="empty-sub">Join an initiative to start earning points!</p>
+            </div>
+        </template>
+
+        <template if:false={isLoading}>
+            <template if:false={hasError}>
+
+                <!-- top 3 podium — 2nd, 1st, 3rd order for visual effect -->
+                <template if:true={hasTopThree}>
+                    <div class="podium-row">
+
+                        <template if:true={second}>
+                            <div class="podium-item">
+                                <div class="podium-card podium-silver">
+                                    <div class="podium-medal">🥈</div>
+                                    <p class="podium-name">{second.contactName}</p>
+                                    <p class="podium-badge">{second.badgeTier}</p>
+                                    <p class="podium-points">{second.totalPoints} pts</p>
+                                </div>
+                                <div class="podium-base podium-base-silver">
+                                    <span class="podium-rank">2</span>
+                                </div>
+                            </div>
+                        </template>
+
+                        <template if:true={first}>
+                            <div class="podium-item podium-item-first">
+                                <div class="podium-card podium-gold">
+                                    <div class="podium-medal podium-medal-first">🥇</div>
+                                    <p class="podium-name">{first.contactName}</p>
+                                    <p class="podium-badge podium-badge-gold">{first.badgeTier}</p>
+                                    <p class="podium-points podium-points-first">{first.totalPoints} pts</p>
+                                </div>
+                                <div class="podium-base podium-base-gold">
+                                    <span class="podium-rank podium-rank-first">1</span>
+                                </div>
+                            </div>
+                        </template>
+
+                        <template if:true={third}>
+                            <div class="podium-item">
+                                <div class="podium-card podium-bronze">
+                                    <div class="podium-medal">🥉</div>
+                                    <p class="podium-name">{third.contactName}</p>
+                                    <p class="podium-badge">{third.badgeTier}</p>
+                                    <p class="podium-points">{third.totalPoints} pts</p>
+                                </div>
+                                <div class="podium-base podium-base-bronze">
+                                    <span class="podium-rank">3</span>
+                                </div>
+                            </div>
+                        </template>
+
+                    </div>
+                </template>
+
+                <!-- ranks 4 to 10 -->
+                <template if:true={hasRest}>
+                    <div class="list-card">
+                        <template for:each={restEntries} for:item="entry">
+                            <div key={entry.volunteerId} class="list-row">
+                                <div class="rank-circle">
+                                    <span class="rank-num">{entry.rank}</span>
+                                </div>
+                                <div class="list-info">
+                                    <p class="list-name">{entry.contactName}</p>
+                                    <p class="list-meta">{entry.badgeTier} &nbsp;·&nbsp; {entry.totalCampaigns} campaigns</p>
+                                </div>
+                                <div class="list-points">
+                                    <p class="list-pts-num">{entry.totalPoints}</p>
+                                    <p class="list-pts-label">points</p>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+
+            </template>
+        </template>
+
+    </div>
+</template>

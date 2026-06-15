@@ -1,0 +1,193 @@
+<template>
+    <div style="max-width:720px; margin:0 auto 2rem; font-family:'Salesforce Sans',Arial,sans-serif; padding:0 1rem;">
+
+        <template if:true={isLoading}>
+            <div style="min-height:150px; display:flex; align-items:center; justify-content:center;">
+                <lightning-spinner alternative-text="Loading impact" size="medium" variant="brand"></lightning-spinner>
+            </div>
+        </template>
+
+        <template if:true={hasError}>
+            <div style="background:#fff1f0; border:1px solid #ffa39e; border-radius:10px; padding:1rem; color:#cf1322; font-size:0.9rem;">
+                ⚠️ &nbsp;{errorMessage}
+            </div>
+        </template>
+
+        <template if:false={isLoading}>
+            <template if:false={hasError}>
+
+                <div style="text-align:center; margin-bottom:1.25rem;">
+                    <h2 style="font-size:1.3rem; font-weight:700; color:#0d4a3a; margin:0 0 0.3rem;">🌍 My Impact</h2>
+                    <p style="font-size:0.85rem; color:#667085; margin:0;">Your personal contribution to the EarthFirst community</p>
+                </div>
+
+                <!-- stat cards -->
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:1rem; margin-bottom:1rem;">
+
+                    <div class={casesCardClass} onclick={handleCasesClick} title="Click to view your cases">
+                        <div class="stat-icon">🚨</div>
+                        <p class="stat-num">{impactData.issuesReported}</p>
+                        <p class="stat-label">Issues Reported</p>
+                        <span class="expand-hint">▼ View</span>
+                    </div>
+
+                    <div class={initiativesCardClass} onclick={handleInitiativesClick} title="Click to view your initiatives">
+                        <div class="stat-icon">🌿</div>
+                        <p class="stat-num">{impactData.initiativesJoined}</p>
+                        <p class="stat-label">Initiatives Joined</p>
+                        <span class="expand-hint">▼ View</span>
+                    </div>
+
+                    <template if:true={impactData.isVolunteer}>
+                        <div class="stat-card stat-blue">
+                            <div class="stat-icon">⭐</div>
+                            <p class="stat-num">{impactData.totalPoints}</p>
+                            <p class="stat-label">Points Earned</p>
+                        </div>
+                        <div class="stat-card stat-purple">
+                            <div class="stat-icon">{badgeEmoji}</div>
+                            <p class="stat-num stat-badge">{badgeLabel}</p>
+                            <p class="stat-label">Current Badge</p>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- tier progress bar — only for volunteers -->
+                <template if:true={impactData.isVolunteer}>
+                    <div style="background:#ffffff; border:1.5px solid #d1e8e0; border-radius:14px; padding:1.25rem 1.5rem; margin-bottom:1rem;">
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
+                            <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+                                <span style={tier0EmojiStyle}>🌱</span>
+                                <span style={tier0LabelStyle}>Starter</span>
+                            </div>
+                            <div style="flex:1; height:2px; background:#e5e7eb; margin:0 6px 16px;"></div>
+                            <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+                                <span style={tier1EmojiStyle}>🧭</span>
+                                <span style={tier1LabelStyle}>Explorer</span>
+                            </div>
+                            <div style="flex:1; height:2px; background:#e5e7eb; margin:0 6px 16px;"></div>
+                            <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+                                <span style={tier2EmojiStyle}>🏆</span>
+                                <span style={tier2LabelStyle}>Achiever</span>
+                            </div>
+                            <div style="flex:1; height:2px; background:#e5e7eb; margin:0 6px 16px;"></div>
+                            <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+                                <span style={tier3EmojiStyle}>🌟</span>
+                                <span style={tier3LabelStyle}>Legend</span>
+                            </div>
+                        </div>
+
+                        <div style="height:10px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:99px; overflow:hidden; margin-bottom:0.6rem;">
+                            <div style={progressFillStyle}></div>
+                        </div>
+
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+                            <span style="font-size:12px; color:#667085;">
+                                <span style="font-weight:700; color:#0d4a3a;">{impactData.totalPoints}</span> pts earned
+                            </span>
+                            <template if:true={isMaxTier}>
+                                <span style="font-size:12px; font-weight:600; color:#15803d;">🌟 Maximum tier reached!</span>
+                            </template>
+                            <template if:false={isMaxTier}>
+                                <span style="font-size:12px; color:#667085;">
+                                    <span style="font-weight:700; color:#1a6b52;">{pointsToNextTier} pts</span> to {nextTierName}
+                                </span>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- volunteer name + badge pills -->
+                <template if:true={impactData.isVolunteer}>
+                    <div style="display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;">
+                        <span style="font-size:12px; font-weight:600; padding:4px 14px; border-radius:99px; background:#f0fdf4; border:1px solid #bbf7d0; color:#0d4a3a;">🪪 {impactData.volunteerName}</span>
+                        <span style="font-size:12px; font-weight:600; padding:4px 14px; border-radius:99px; background:#faf5ff; border:1px solid #e9d5ff; color:#7e22ce;">{impactData.badgeTier}</span>
+                    </div>
+                </template>
+
+                <template if:false={impactData.isVolunteer}>
+                    <div style="text-align:center; background:#f0fdf4; border-radius:10px; padding:1rem;">
+                        <p style="font-size:0.9rem; color:#0d4a3a; font-weight:500; margin:0;">🌱 Register as a Volunteer to start earning points and badges!</p>
+                    </div>
+                </template>
+
+            </template>
+        </template>
+
+        <!-- cases modal -->
+        <template if:true={showCases}>
+            <div class="modal-backdrop" onclick={closeCasesModal}></div>
+            <div class="modal-box">
+                <div class="modal-header">
+                    <span class="modal-title">🚨 My Reported Issues</span>
+                    <button class="modal-close" onclick={closeCasesModal}>✕</button>
+                </div>
+                <div class="modal-body">
+                    <template if:true={panelLoading}>
+                        <div class="modal-loading">
+                            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                        </div>
+                    </template>
+                    <template if:false={panelLoading}>
+                        <template if:true={hasCases}>
+                            <template for:each={cases} for:item="c">
+                                <div key={c.Id} class="panel-item">
+                                    <div class="panel-item-top">
+                                        <span class="panel-item-title">{c.Subject}</span>
+                                        <span class={c.statusClass}>{c.Status}</span>
+                                    </div>
+                                    <div class="panel-item-meta">
+                                        <span>📁 {c.Issue_Category__c}</span>
+                                        <span>⚡ {c.Severity_Level__c}</span>
+                                        <span>📅 {c.formattedDate}</span>
+                                    </div>
+                                </div>
+                            </template>
+                        </template>
+                        <template if:false={hasCases}>
+                            <p class="modal-empty">No cases found.</p>
+                        </template>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+        <!-- initiatives modal -->
+        <template if:true={showInitiatives}>
+            <div class="modal-backdrop" onclick={closeInitiativesModal}></div>
+            <div class="modal-box">
+                <div class="modal-header">
+                    <span class="modal-title">🌿 My Initiatives</span>
+                    <button class="modal-close" onclick={closeInitiativesModal}>✕</button>
+                </div>
+                <div class="modal-body">
+                    <template if:true={panelLoading}>
+                        <div class="modal-loading">
+                            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                        </div>
+                    </template>
+                    <template if:false={panelLoading}>
+                        <template if:true={hasInitiatives}>
+                            <template for:each={initiatives} for:item="vp">
+                                <div key={vp.Id} class="panel-item">
+                                    <div class="panel-item-top">
+                                        <span class="panel-item-title">{vp.initiativeName}</span>
+                                        <span class={vp.attendanceClass}>{vp.Attendance_Status__c}</span>
+                                    </div>
+                                    <div class="panel-item-meta">
+                                        <span>📊 {vp.initiativeStatus}</span>
+                                        <span>📅 {vp.startDate}</span>
+                                    </div>
+                                </div>
+                            </template>
+                        </template>
+                        <template if:false={hasInitiatives}>
+                            <p class="modal-empty">No initiatives found.</p>
+                        </template>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+    </div>
+</template>

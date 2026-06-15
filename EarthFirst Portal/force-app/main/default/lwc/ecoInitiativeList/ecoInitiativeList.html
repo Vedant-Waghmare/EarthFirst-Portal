@@ -1,0 +1,207 @@
+<template>
+    <div class="list-wrapper">
+
+        <div class="list-header">
+            <h2 class="list-title">🌱 Green Initiatives</h2>
+            <p class="list-subtitle">Explore active and upcoming community initiatives near you</p>
+        </div>
+
+        <!-- category filter -->
+        <div class="filter-section">
+            <span class="filter-section-label">Category</span>
+            <div class="filter-bar">
+                <template for:each={filterOptions} for:item="opt">
+                    <button key={opt.value} class={opt.cssClass} data-value={opt.value} onclick={handleFilterClick}>
+                        {opt.label}
+                    </button>
+                </template>
+            </div>
+        </div>
+
+        <!-- status filter -->
+        <div class="filter-section">
+            <span class="filter-section-label">Status</span>
+            <div class="status-bar">
+                <template for:each={statusFilterOptions} for:item="opt">
+                    <button key={opt.value} class={opt.cssClass} data-value={opt.value} onclick={handleStatusFilterClick}>
+                        {opt.label}
+                    </button>
+                </template>
+            </div>
+        </div>
+
+        <template if:true={isLoading}>
+            <div class="spinner-container">
+                <lightning-spinner alternative-text="Loading initiatives" size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <template if:true={hasError}>
+            <div class="error-box">⚠️ &nbsp;Could not load initiatives: {errorMessage}</div>
+        </template>
+
+        <template if:true={isEmpty}>
+            <div class="empty-box">🌿 No initiatives found for this filter. Check back soon!</div>
+        </template>
+
+        <template if:false={isLoading}>
+            <template if:false={hasError}>
+                <div class="cards-grid">
+                    <template for:each={initiatives} for:item="card">
+                        <c-eco-initiative-card
+                            key={card.Id}
+                            initiative={card}
+                            oncardselect={handleCardSelect}>
+                        </c-eco-initiative-card>
+                    </template>
+                </div>
+            </template>
+        </template>
+
+        <!-- detail modal -->
+        <template if:true={showModal}>
+            <div class="modal-backdrop" onclick={closeModal}></div>
+            <div class="modal-box">
+                <div class="modal-header">
+                    <div>
+                        <div class="modal-badge-row">
+                            <span class={modalTypeBadge}>{selectedInitiative.Initiative_Type__c}</span>
+                            <span class={modalStatusBadge}>{selectedInitiative.Status__c}</span>
+                        </div>
+                        <h2 class="modal-title">{selectedInitiative.Name}</h2>
+                    </div>
+                    <button class="modal-close" onclick={closeModal}>✕</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="modal-stats-row">
+                        <div class="modal-stat">
+                            <span class="modal-stat-num">{selectedInitiative.Volunteers_Registered__c}</span>
+                            <span class="modal-stat-label">Enrolled</span>
+                        </div>
+                        <div class="modal-stat">
+                            <span class="modal-stat-num">{selectedInitiative.Volunteers_Required__c}</span>
+                            <span class="modal-stat-label">Total Slots</span>
+                        </div>
+                        <div class="modal-stat">
+                            <span class="modal-stat-num">{modalSlotsLeft}</span>
+                            <span class="modal-stat-label">Slots Left</span>
+                        </div>
+                    </div>
+                    <div class="modal-slot-track">
+                        <div class="modal-slot-fill" style={modalSlotStyle}></div>
+                    </div>
+                    <div class="modal-divider"></div>
+                    <div class="modal-detail-grid">
+                        <div class="modal-detail-item">
+                            <span class="modal-detail-label">📅 Start Date</span>
+                            <span class="modal-detail-value">{modalStartDate}</span>
+                        </div>
+                        <div class="modal-detail-item">
+                            <span class="modal-detail-label">🏁 End Date</span>
+                            <span class="modal-detail-value">{modalEndDate}</span>
+                        </div>
+                        <div class="modal-detail-item">
+                            <span class="modal-detail-label">🏢 Organiser</span>
+                            <span class="modal-detail-value">{modalOrganiser}</span>
+                        </div>
+                        <div class="modal-detail-item">
+                            <span class="modal-detail-label">💰 Budget</span>
+                            <span class="modal-detail-value">{modalBudget}</span>
+                        </div>
+                        <div class="modal-detail-item">
+                            <span class="modal-detail-label">🔞 Minimum Age</span>
+                            <span class="modal-detail-value">{modalMinAge}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="modal-close-btn" onclick={closeModal}>Close</button>
+                    <button class="modal-join-btn" onclick={openJoinModal}>🌱 Join Initiative</button>
+                </div>
+            </div>
+        </template>
+
+        <!-- join modal -->
+        <template if:true={showJoinComponent}>
+            <div class="modal-backdrop" onclick={closeJoinModal}></div>
+            <div class="flow-modal-box">
+                <div class="modal-header">
+                    <div>
+                        <p class="flow-modal-subtitle">Joining</p>
+                        <h2 class="modal-title">{selectedInitiative.Name}</h2>
+                    </div>
+                    <button class="modal-close" onclick={closeJoinModal}>✕</button>
+                </div>
+                <div class="flow-modal-body">
+
+                    <template if:true={showJoinButton}>
+                        <p style="font-size:0.9rem; color:#374151; margin:0 0 1.25rem;">
+                            You are about to join <strong>{selectedInitiative.Name}</strong>.
+                            Are you sure you want to register for this initiative?
+                        </p>
+                        <div style="display:flex; gap:10px; justify-content:flex-end;">
+                            <button class="modal-close-btn" onclick={closeJoinModal}>Cancel</button>
+                            <button class="modal-join-btn" onclick={handleJoinInitiative}>🌱 Confirm Join</button>
+                        </div>
+                    </template>
+
+                    <template if:true={isJoining}>
+                        <div style="display:flex; align-items:center; gap:12px; padding:1rem 0;">
+                            <lightning-spinner alternative-text="Joining" size="small"></lightning-spinner>
+                            <span style="font-size:0.9rem; color:#374151;">Registering you...</span>
+                        </div>
+                    </template>
+
+                    <template if:true={isJoinSuccess}>
+                        <div style="text-align:center; padding:1rem 0;">
+                            <div style="font-size:2.5rem; margin-bottom:0.75rem;">🎉</div>
+                            <p style="font-size:1rem; font-weight:600; color:#15803d; margin:0 0 0.5rem;">Successfully Registered!</p>
+                            <p style="font-size:0.875rem; color:#6b7280; margin:0 0 1.25rem;">You have joined <strong>{selectedInitiative.Name}</strong>. See you there!</p>
+                            <button class="modal-join-btn" onclick={closeJoinModal}>Done</button>
+                        </div>
+                    </template>
+
+                    <template if:true={isAlreadyJoined}>
+                        <div style="text-align:center; padding:1rem 0;">
+                            <div style="font-size:2.5rem; margin-bottom:0.75rem;">✅</div>
+                            <p style="font-size:1rem; font-weight:600; color:#b45309; margin:0 0 0.5rem;">Already Registered</p>
+                            <p style="font-size:0.875rem; color:#6b7280; margin:0 0 1.25rem;">You have already registered for this initiative.</p>
+                            <button class="modal-close-btn" onclick={closeJoinModal}>Close</button>
+                        </div>
+                    </template>
+
+                    <template if:true={isNotVolunteer}>
+                        <div style="text-align:center; padding:1rem 0;">
+                            <div style="font-size:2.5rem; margin-bottom:0.75rem;">⚠️</div>
+                            <p style="font-size:1rem; font-weight:600; color:#dc2626; margin:0 0 0.5rem;">Volunteer Profile Required</p>
+                            <p style="font-size:0.875rem; color:#6b7280; margin:0 0 1.25rem;">You need an active volunteer profile to join initiatives. Please register as a volunteer first.</p>
+                            <button class="modal-close-btn" onclick={closeJoinModal}>Close</button>
+                        </div>
+                    </template>
+
+                    <template if:true={isInitCompleted}>
+                        <div style="text-align:center; padding:1rem 0;">
+                            <div style="font-size:2.5rem; margin-bottom:0.75rem;">🏁</div>
+                            <p style="font-size:1rem; font-weight:600; color:#0369a1; margin:0 0 0.5rem;">Initiative Completed</p>
+                            <p style="font-size:0.875rem; color:#6b7280; margin:0 0 1.25rem;">This initiative has already been completed. Check out other active initiatives!</p>
+                            <button class="modal-close-btn" onclick={closeJoinModal}>Close</button>
+                        </div>
+                    </template>
+
+                    <template if:true={isJoinError}>
+                        <div style="text-align:center; padding:1rem 0;">
+                            <div style="font-size:2.5rem; margin-bottom:0.75rem;">❌</div>
+                            <p style="font-size:1rem; font-weight:600; color:#dc2626; margin:0 0 0.5rem;">Unable to Join</p>
+                            <p style="font-size:0.875rem; color:#6b7280; margin:0 0 1.25rem;">{joinErrorMessage}</p>
+                            <button class="modal-close-btn" onclick={closeJoinModal}>Close</button>
+                        </div>
+                    </template>
+
+                </div>
+            </div>
+        </template>
+
+    </div>
+</template>

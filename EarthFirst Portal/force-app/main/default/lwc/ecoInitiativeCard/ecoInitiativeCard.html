@@ -1,0 +1,29 @@
+<template>
+    <div class={cardClass} onclick={handleCardClick}>
+
+        <div class="badge-row">
+            <span class={typeBadgeClass}>{initiative.Initiative_Type__c}</span>
+            <span class={statusBadgeClass}>{initiative.Status__c}</span>
+        </div>
+
+        <h3 class="card-name">{initiative.Name}</h3>
+
+        <div class="card-meta">
+            <span class="meta-item">📅 {formattedStartDate}</span>
+        </div>
+
+        <!-- volunteer slots progress -->
+        <div class="slot-bar">
+            <div class="slot-label">
+                <span>Volunteers</span>
+                <span>{initiative.Volunteers_Registered__c} / {initiative.Volunteers_Required__c}</span>
+            </div>
+            <div class="slot-track">
+                <div class="slot-fill" style={slotFillStyle}></div>
+            </div>
+        </div>
+
+        <p class="expand-hint">Click to view details ▼</p>
+
+    </div>
+</template>

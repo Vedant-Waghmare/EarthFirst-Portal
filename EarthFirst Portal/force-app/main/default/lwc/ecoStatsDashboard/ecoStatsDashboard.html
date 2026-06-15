@@ -1,0 +1,42 @@
+<template>
+    <div class="eco-wrapper">
+
+        <div class="eco-header">
+            <h2 class="eco-title">🌱 Together We Can Make a Difference</h2>
+            <p class="eco-subtitle">
+                Join thousands of citizens and volunteers working towards a cleaner,
+                greener and more sustainable community.
+            </p>
+        </div>
+
+        <template if:true={isLoading}>
+            <div class="spinner-container">
+                <lightning-spinner alternative-text="Loading stats" size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <template if:true={hasError}>
+            <div class="error-box">⚠️ &nbsp;Could not load stats: {errorMessage}</div>
+        </template>
+
+        <!-- stats grid — 3 cards per row -->
+        <template if:false={isLoading}>
+            <template if:false={hasError}>
+                <div class="stats-grid">
+                    <template for:each={statCards} for:item="card">
+                        <div key={card.key} class="stat-card">
+                            <div class="card-emoji">{card.emoji}</div>
+                            <div class="card-value">{card.displayValue}</div>
+                            <div class="card-label">{card.label}</div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </template>
+
+        <div class="eco-footer">
+            🌿 &nbsp;Every action counts — Report, Volunteer, and Track your impact today!
+        </div>
+
+    </div>
+</template>

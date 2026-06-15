@@ -1,0 +1,125 @@
+<template>
+    <div style="max-width:720px; margin:2rem auto; font-family:'Salesforce Sans',Arial,sans-serif; padding:0 1rem;">
+
+        <!-- loading state -->
+        <template if:true={isLoading}>
+            <div style="min-height:200px; display:flex; align-items:center; justify-content:center;">
+                <lightning-spinner alternative-text="Loading profile" size="medium" variant="brand"></lightning-spinner>
+            </div>
+        </template>
+
+        <template if:true={hasError}>
+            <div style="background:#fff1f0; border:1px solid #ffa39e; border-radius:10px; padding:1rem; color:#cf1322; font-size:0.9rem;">
+                ⚠️ &nbsp;{errorMessage}
+            </div>
+        </template>
+
+        <template if:false={isLoading}>
+            <template if:false={hasError}>
+
+                <div style="background:#ffffff; border:1.5px solid #d1e8e0; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px rgba(13,74,58,0.08);">
+
+                    <!-- green header band -->
+                    <div style="background:linear-gradient(135deg,#0d4a3a,#1a6b52); padding:1.75rem 1.75rem 1.25rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+                        <div style="width:64px; height:64px; border-radius:50%; background:rgba(255,255,255,0.2); border:2px solid rgba(255,255,255,0.4); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <span style="color:#fff; font-size:1.5rem; font-weight:700;">{avatarInitials}</span>
+                        </div>
+                        <div style="flex:1;">
+                            <p style="color:#fff; font-size:1.25rem; font-weight:700; margin:0 0 0.2rem;">{fullName}</p>
+                            <p style="color:rgba(255,255,255,0.75); font-size:0.85rem; margin:0 0 0.5rem;">{email}</p>
+                            <span style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:#fff; font-size:11px; font-weight:600; padding:3px 12px; border-radius:99px;">🌍 Citizen</span>
+                        </div>
+                    </div>
+
+                    <!-- card body -->
+                    <div style="padding:1.5rem 1.75rem;">
+
+                        <p style="font-size:0.72rem; font-weight:700; color:#1a6b52; text-transform:uppercase; letter-spacing:0.08em; margin:0 0 1rem;">Personal Information</p>
+
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem 2rem;">
+                            <div>
+                                <p style="font-size:0.7rem; color:#9ca3af; text-transform:uppercase; font-weight:600; margin:0 0 3px;">First Name</p>
+                                <p style="font-size:0.95rem; color:#1d2939; font-weight:500; margin:0;">{firstName}</p>
+                            </div>
+                            <div>
+                                <p style="font-size:0.7rem; color:#9ca3af; text-transform:uppercase; font-weight:600; margin:0 0 3px;">Last Name</p>
+                                <p style="font-size:0.95rem; color:#1d2939; font-weight:500; margin:0;">{lastName}</p>
+                            </div>
+                            <div>
+                                <p style="font-size:0.7rem; color:#9ca3af; text-transform:uppercase; font-weight:600; margin:0 0 3px;">Email</p>
+                                <p style="font-size:0.95rem; color:#1d2939; font-weight:500; margin:0;">{email}</p>
+                            </div>
+                            <div>
+                                <p style="font-size:0.7rem; color:#9ca3af; text-transform:uppercase; font-weight:600; margin:0 0 3px;">Mobile</p>
+                                <p style="font-size:0.95rem; color:#1d2939; font-weight:500; margin:0;">{phone}</p>
+                            </div>
+                        </div>
+
+                        <div style="height:1px; background:#e5e7eb; margin:1.5rem 0;"></div>
+
+                        <!-- volunteer section -->
+                        <template if:true={isVolunteer}>
+                            <p style="font-size:0.72rem; font-weight:700; color:#1a6b52; text-transform:uppercase; letter-spacing:0.08em; margin:0 0 1rem;">🌱 Volunteer Profile</p>
+
+                            <template if:true={isVolunteerLoading}>
+                                <div style="min-height:80px; display:flex; align-items:center; justify-content:center;">
+                                    <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                                </div>
+                            </template>
+
+                            <template if:false={isVolunteerLoading}>
+                                <template if:true={volunteerData}>
+                                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:1.25rem; flex-wrap:wrap;">
+                                        <span style="background:#f0fdf4; border:1px solid #bbf7d0; color:#0d4a3a; font-size:13px; font-weight:600; padding:5px 14px; border-radius:99px;">🪪 {volunteerData.Name}</span>
+                                        <span style="background:#f0fdf4; border:1px solid #86efac; color:#15803d; font-size:11px; font-weight:600; padding:3px 10px; border-radius:99px;">{volunteerData.Status__c}</span>
+                                    </div>
+
+                                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem 2rem; margin-bottom:1.25rem;">
+                                        <div>
+                                            <p style="font-size:0.7rem; color:#9ca3af; text-transform:uppercase; font-weight:600; margin:0 0 3px;">Availability</p>
+                                            <p style="font-size:0.95rem; color:#1d2939; font-weight:500; margin:0;">{volunteerData.Availability__c}</p>
+                                        </div>
+                                        <div>
+                                            <p style="font-size:0.7rem; color:#9ca3af; text-transform:uppercase; font-weight:600; margin:0 0 3px;">Registered On</p>
+                                            <p style="font-size:0.95rem; color:#1d2939; font-weight:500; margin:0;">{formattedEnrollmentDate}</p>
+                                        </div>
+                                        <div>
+                                            <p style="font-size:0.7rem; color:#9ca3af; text-transform:uppercase; font-weight:600; margin:0 0 3px;">Campaigns Completed</p>
+                                            <p style="font-size:1.6rem; color:#0d4a3a; font-weight:700; margin:0;">{volunteerData.Total_Campaigns__c}</p>
+                                        </div>
+                                        <div>
+                                            <p style="font-size:0.7rem; color:#9ca3af; text-transform:uppercase; font-weight:600; margin:0 0 3px;">Last Campaign</p>
+                                            <p style="font-size:0.95rem; color:#1d2939; font-weight:500; margin:0;">{formattedLastCampaignDate}</p>
+                                        </div>
+                                    </div>
+
+                                    <p style="font-size:0.7rem; color:#9ca3af; text-transform:uppercase; font-weight:600; margin:0 0 8px;">Skills</p>
+                                    <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                                        <template for:each={skillsList} for:item="skill">
+                                            <span key={skill} style="font-size:12px; font-weight:500; padding:4px 12px; border-radius:99px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe;">{skill}</span>
+                                        </template>
+                                    </div>
+                                </template>
+
+                                <template if:false={volunteerData}>
+                                    <p style="color:#667085; font-size:0.9rem;">Volunteer details not found.</p>
+                                </template>
+                            </template>
+                        </template>
+
+                        <!-- not a volunteer -->
+                        <template if:false={isVolunteer}>
+                            <div style="text-align:center; background:#f0fdf4; border-radius:12px; padding:1.25rem;">
+                                <p style="font-size:1rem; font-weight:600; color:#0d4a3a; margin:0 0 0.3rem;">🌿 Want to make a bigger impact?</p>
+                                <p style="font-size:0.85rem; color:#667085; margin:0;">Join as a volunteer and participate in green initiatives.</p>
+                            </div>
+                        </template>
+
+                    </div>
+                </div>
+
+            </template>
+        </template>
+
+    </div>
+</template>

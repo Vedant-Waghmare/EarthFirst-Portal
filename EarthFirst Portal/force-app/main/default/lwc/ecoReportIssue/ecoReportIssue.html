@@ -1,0 +1,146 @@
+<template>
+    <div class="wrapper">
+
+        <div class="form-header">
+            <div class="header-icon">🚨</div>
+            <div>
+                <h1 class="form-title">Report an Issue</h1>
+                <p class="form-subtitle">Help us keep your community clean and safe</p>
+            </div>
+        </div>
+
+        <!-- success screen -->
+        <template if:true={isSubmitted}>
+            <div class="success-card">
+                <div class="success-icon">✅</div>
+                <h2 class="success-title">Report Submitted Successfully</h2>
+                <p class="success-message">
+                    Thank you for helping EcoConnect. Your complaint has been registered
+                    and our city officers will review it shortly.
+                </p>
+                <div class="case-ref-box">
+                    <span class="case-ref-label">Reference Number</span>
+                    <span class="case-ref-value">{submittedCaseNumber}</span>
+                </div>
+                <button class="btn-secondary" onclick={handleReportAnother}>Report Another Issue</button>
+            </div>
+        </template>
+
+        <!-- form -->
+        <template if:false={isSubmitted}>
+            <div class="form-card">
+
+                <div class="progress-bar-track">
+                    <div class="progress-step">
+                        <div class={stepCircle1}><span>1</span></div>
+                        <span class="step-label">Issue Details</span>
+                    </div>
+                    <div class={progressLine}></div>
+                    <div class="progress-step">
+                        <div class={stepCircle2}><span>2</span></div>
+                        <span class="step-label">Severity</span>
+                    </div>
+                </div>
+
+                <!-- step 1 -->
+                <template if:true={isStep1}>
+                    <div class="step-body">
+
+                        <div class="field-group">
+                            <label class="field-label">Issue Title <span class="required">*</span></label>
+                            <input type="text" class={subjectClass}
+                                placeholder="e.g. Illegal dumping near Ward 12 park"
+                                value={subject}
+                                maxlength="255"
+                                onchange={handleSubjectChange} />
+                            <template if:true={subjectError}>
+                                <span class="field-error">{subjectError}</span>
+                            </template>
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label">Issue Category <span class="required">*</span></label>
+                            <div class="category-grid">
+                                <template for:each={categoryOptions} for:item="cat">
+                                    <button key={cat.value} class={cat.cssClass}
+                                        data-value={cat.value} onclick={handleCategoryClick}>
+                                        <span class="cat-icon">{cat.icon}</span>
+                                        <span class="cat-label">{cat.label}</span>
+                                    </button>
+                                </template>
+                            </div>
+                            <template if:true={categoryError}>
+                                <span class="field-error">{categoryError}</span>
+                            </template>
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label">Description</label>
+                            <textarea class="field-textarea"
+                                placeholder="Describe the issue in detail — what you saw, when it happened, any other relevant information..."
+                                maxlength="2000"
+                                onchange={handleDescriptionChange}>
+                            </textarea>
+                            <span class="char-count">{descriptionLength} / 2000</span>
+                        </div>
+
+                        <div class="step-actions">
+                            <button class="btn-primary" onclick={handleStep1Next}>Continue →</button>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- step 2 -->
+                <template if:true={isStep2}>
+                    <div class="step-body">
+
+                        <div class="field-group">
+                            <label class="field-label">Severity Level <span class="required">*</span></label>
+                            <div class="severity-grid">
+                                <template for:each={severityOptions} for:item="sev">
+                                    <button key={sev.value} class={sev.cssClass}
+                                        data-value={sev.value} onclick={handleSeverityClick}>
+                                        <span class="sev-icon">{sev.icon}</span>
+                                        <span class="sev-label">{sev.label}</span>
+                                        <span class="sev-desc">{sev.desc}</span>
+                                    </button>
+                                </template>
+                            </div>
+                            <template if:true={severityError}>
+                                <span class="field-error">{severityError}</span>
+                            </template>
+                        </div>
+
+                        <!-- review before submit -->
+                        <div class="review-box">
+                            <p class="review-title">📋 Review Before Submitting</p>
+                            <div class="review-row">
+                                <span class="review-key">Title</span>
+                                <span class="review-val">{subject}</span>
+                            </div>
+                            <div class="review-row">
+                                <span class="review-key">Category</span>
+                                <span class="review-val">{issueCategory}</span>
+                            </div>
+                        </div>
+
+                        <template if:true={hasError}>
+                            <div class="error-banner">⚠️ {errorMessage}</div>
+                        </template>
+
+                        <div class="step-actions step-actions-two">
+                            <button class="btn-secondary" onclick={handleBack}>← Back</button>
+                            <button class="btn-primary" onclick={handleSubmit} disabled={isSubmitting}>
+                                <template if:true={isSubmitting}>Submitting...</template>
+                                <template if:false={isSubmitting}>🚀 Submit Report</template>
+                            </button>
+                        </div>
+
+                    </div>
+                </template>
+
+            </div>
+        </template>
+
+    </div>
+</template>

@@ -1,0 +1,75 @@
+<template>
+    <div class="showcase-wrapper">
+
+        <!-- header with filter tabs -->
+        <div class="showcase-header">
+            <div class="header-top">
+                <div>
+                    <h2 class="header-title">💬 Community Feedback</h2>
+                    <p class="header-subtitle">What our community is saying</p>
+                </div>
+                <div class="filter-tabs">
+                    <button class={tabAllClass} data-value="All" onclick={handleFilterChange}>All</button>
+                    <button class={tabInitiativeClass} data-value="Initiative" onclick={handleFilterChange}>Initiatives</button>
+                    <button class={tabCaseClass} data-value="Case" onclick={handleFilterChange}>Cases</button>
+                </div>
+            </div>
+
+            <!-- rating summary shown only after load -->
+            <template if:false={isLoading}>
+                <div class="rating-summary">
+                    <div class="avg-block">
+                        <span class="avg-number">{averageRating}</span>
+                        <div class="avg-stars">{averageStars}</div>
+                        <span class="avg-label">{totalCount} reviews</span>
+                    </div>
+                    <div class="rating-bars">
+                        <template for:each={ratingBreakdown} for:item="row">
+                            <div key={row.star} class="bar-row">
+                                <span class="bar-label">{row.star}★</span>
+                                <div class="bar-track">
+                                    <div class="bar-fill" style={row.barStyle}></div>
+                                </div>
+                                <span class="bar-count">{row.count}</span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <template if:true={isLoading}>
+            <div class="loading-box">
+                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- feedback cards list -->
+        <template if:false={isLoading}>
+            <div class="cards-wrapper">
+
+                <template if:true={isEmpty}>
+                    <div class="empty-box">No feedback found for this filter.</div>
+                </template>
+
+                <template for:each={allFeedbacks} for:item="fb">
+                    <div key={fb.id} class="feedback-card">
+                        <div class="card-top">
+                            <div class="card-stars">{fb.stars}</div>
+                            <span class="card-date">{fb.formattedDate}</span>
+                        </div>
+                        <p class="card-comment">{fb.comments}</p>
+                        <div class="card-footer">
+                            <span class="card-author">👤 {fb.submittedBy}</span>
+                            <template if:true={fb.relatedTo}>
+                                <span class="card-related">📌 {fb.relatedTo}</span>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+
+            </div>
+        </template>
+
+    </div>
+</template>

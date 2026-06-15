@@ -1,0 +1,57 @@
+<div style="font-family: Arial, sans-serif;">
+
+  <!-- HEADER -->
+  <div style="padding: 8px 0 12px 4px;">
+    <p style="font-size: 1.625rem; font-weight: 700; color: #1a3c2e; margin: 0 0 4px; line-height: 1.2;">📋 Rating Guide</p>
+    <p style="font-size: 0.875rem; color: #6b7280; margin: 0;">Understand what each rating means</p>
+  </div>
+
+  <!-- RATING GUIDE CARD -->
+  <div style="background: white; border: 1px solid #e0e0e0; border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+    <p style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: #888; margin: 0 0 14px; text-transform: uppercase;">Rating guide</p>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; align-items: center; gap: 12px; background: #f0faf6; border: 1px solid #b2dfdb; border-radius: 8px; padding: 10px 14px;">
+        <span style="font-size: 18px;">😞</span>
+        <div>
+          <p style="margin: 0; font-size: 13px; font-weight: 600; color: #00695C;">1 — Very Poor</p>
+          <p style="margin: 0; font-size: 11px; color: #888;">Completely unsatisfied</p>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; background: #f0faf6; border: 1px solid #b2dfdb; border-radius: 8px; padding: 10px 14px;">
+        <span style="font-size: 18px;">😕</span>
+        <div>
+          <p style="margin: 0; font-size: 13px; font-weight: 600; color: #00695C;">2 — Poor</p>
+          <p style="margin: 0; font-size: 11px; color: #888;">Below expectations</p>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; background: #f0faf6; border: 1px solid #b2dfdb; border-radius: 8px; padding: 10px 14px;">
+        <span style="font-size: 18px;">😐</span>
+        <div>
+          <p style="margin: 0; font-size: 13px; font-weight: 600; color: #00695C;">3 — Average</p>
+          <p style="margin: 0; font-size: 11px; color: #888;">Met basic expectations</p>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; background: #f0faf6; border: 1px solid #b2dfdb; border-radius: 8px; padding: 10px 14px;">
+        <span style="font-size: 18px;">😊</span>
+        <div>
+          <p style="margin: 0; font-size: 13px; font-weight: 600; color: #00695C;">4 — Good</p>
+          <p style="margin: 0; font-size: 11px; color: #888;">Satisfied with service</p>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; background: #f0faf6; border: 1px solid #b2dfdb; border-radius: 8px; padding: 10px 14px;">
+        <span style="font-size: 18px;">🤩</span>
+        <div>
+          <p style="margin: 0; font-size: 13px; font-weight: 600; color: #00695C;">5 — Excellent</p>
+          <p style="margin: 0; font-size: 11px; color: #888;">Exceeded all expectations</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER BANNER -->
+  <div style="background: #f0faf6; border: 1px solid #b2dfdb; border-radius: 8px; padding: 14px 16px; text-align: center;">
+    <p style="margin: 0; font-size: 13px; color: #00695C; font-weight: 600;">Your feedback builds a Greener Environment</p>
+    <p style="margin: 4px 0 0; font-size: 11px; color: #888;">Every response helps us improve</p>
+  </div>
+
+</div>

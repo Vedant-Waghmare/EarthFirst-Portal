@@ -1,0 +1,161 @@
+<template>
+    <div class="wrapper">
+
+        <div class="form-header">
+            <div class="header-icon">💬</div>
+            <div>
+                <h1 class="form-title">Give Feedback</h1>
+                <p class="form-subtitle">Help us improve EcoConnect - your opinion matters</p>
+            </div>
+        </div>
+
+        <!-- loading state -->
+        <template if:true={isLoading}>
+            <div class="state-card">
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                <p class="state-msg">Loading feedback form...</p>
+            </div>
+        </template>
+
+        <template if:true={hasLoadError}>
+            <div class="state-card">
+                <div class="state-icon">⚠️</div>
+                <p class="state-msg">{errorMessage}</p>
+            </div>
+        </template>
+
+        <!-- success screen -->
+        <template if:true={isSubmitted}>
+            <div class="success-card">
+                <div class="success-icon">🙏</div>
+                <h2 class="success-title">Thank You for Your Feedback!</h2>
+                <p class="success-message">
+                    Your feedback helps EcoConnect serve your community better.
+                    We review every submission and use it to improve our platform.
+                </p>
+                <div class="rating-display">
+                    <span class="rating-stars">{submittedStars}</span>
+                    <span class="rating-text">{submittedRatingLabel}</span>
+                </div>
+                <button class="btn-secondary" onclick={handleSubmitAnother}>Submit Another Feedback</button>
+            </div>
+        </template>
+
+        <!-- main form -->
+        <template if:true={showForm}>
+            <div class="form-card">
+                <div class="form-body">
+
+                    <!-- feedback type selection -->
+                    <div class="field-group">
+                        <label class="field-label">
+                            What are you giving feedback on? <span class="required">*</span>
+                        </label>
+                        <div class="type-grid">
+                            <template for:each={feedbackTypeOptions} for:item="type">
+                                <button key={type.value} class={type.cssClass}
+                                    data-value={type.value} onclick={handleTypeClick}>
+                                    <span class="type-icon">{type.icon}</span>
+                                    <span class="type-label">{type.label}</span>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- case dropdown -->
+                    <template if:true={showCaseDropdown}>
+                        <div class="field-group">
+                            <label class="field-label">Select Your Case</label>
+                            <select class="field-select" onchange={handleCaseChange}>
+                                <option value="">-- Select a Case --</option>
+                                <template for:each={caseOptions} for:item="opt">
+                                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                </template>
+                            </select>
+                        </div>
+                    </template>
+
+                    <template if:true={noCases}>
+                        <div class="info-banner">ℹ️ You have no open cases to give feedback on.</div>
+                    </template>
+
+                    <!-- initiative dropdown -->
+                    <template if:true={showInitDropdown}>
+                        <div class="field-group">
+                            <label class="field-label">Select an Initiative</label>
+                            <select class="field-select" onchange={handleInitChange}>
+                                <option value="">-- Select an Initiative --</option>
+                                <template for:each={initiativeOptions} for:item="opt">
+                                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                </template>
+                            </select>
+                        </div>
+                    </template>
+
+                    <template if:true={noInitiatives}>
+                        <div class="info-banner">ℹ️ You have not registered for any initiatives yet.</div>
+                    </template>
+
+                    <!-- star rating -->
+                    <div class="field-group">
+                        <label class="field-label">Your Rating <span class="required">*</span></label>
+                        <div class="stars-row">
+                            <template for:each={starOptions} for:item="star">
+                                <button key={star.value} class={star.cssClass}
+                                    data-value={star.value}
+                                    onmouseenter={handleStarHover}
+                                    onmouseleave={handleStarLeave}
+                                    onclick={handleStarClick}>★</button>
+                            </template>
+                        </div>
+                        <div class="rating-label-row">
+                            <template if:true={selectedRatingLabel}>
+                                <span class="rating-label">{selectedRatingLabel}</span>
+                            </template>
+                        </div>
+                        <template if:true={ratingError}>
+                            <span class="field-error">{ratingError}</span>
+                        </template>
+                    </div>
+
+                    <!-- comments -->
+                    <div class="field-group">
+                        <label class="field-label">
+                            Comments
+                            <template if:true={commentsRequired}>
+                                <span class="required">*</span>
+                            </template>
+                        </label>
+                        <template if:true={commentsRequired}>
+                            <p class="field-hint">Comments are required for ratings of 2 or below.</p>
+                        </template>
+                        <textarea class={commentsClass}
+                            placeholder="Share your thoughts, suggestions, or concerns..."
+                            maxlength="2000"
+                            onchange={handleCommentsChange}>
+                        </textarea>
+                        <div class="textarea-footer">
+                            <template if:true={commentsError}>
+                                <span class="field-error">{commentsError}</span>
+                            </template>
+                            <span class="char-count">{commentsLength} / 2000</span>
+                        </div>
+                    </div>
+
+                    <template if:true={hasError}>
+                        <div class="error-banner">⚠️ {errorMessage}</div>
+                    </template>
+
+                    <div class="form-actions">
+                        <button class="btn-primary" onclick={handleSubmit} disabled={isSubmitting}>
+                            <template if:true={isSubmitting}>Submitting...</template>
+                            <template if:false={isSubmitting}>💬 Submit Feedback</template>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </template>
+
+    </div>
+</template>

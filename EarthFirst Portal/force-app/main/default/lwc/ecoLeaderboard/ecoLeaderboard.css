@@ -1,0 +1,129 @@
+.leaderboard-wrapper {
+    max-width: 800px;
+    margin: 2rem auto;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    padding: 0 1rem;
+}
+
+.lb-header    { text-align: center; margin-bottom: 1.5rem; }
+.lb-title     { font-size: 1.6rem; font-weight: 700; color: #0d4a3a; margin: 0 0 0.4rem; }
+.lb-subtitle  { font-size: 0.9rem; color: #667085; margin: 0; }
+
+.tier-legend {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+.tier-pill     { font-size: 12px; padding: 4px 14px; border-radius: 99px; font-weight: 600; }
+.tier-starter  { background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; }
+.tier-explorer { background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; }
+.tier-achiever { background: #fff7ed; border: 1px solid #fed7aa; color: #c2410c; }
+.tier-legend-pill { background: #faf5ff; border: 1px solid #e9d5ff; color: #7e22ce; }
+
+.spinner-container {
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.error-box {
+    background: #fff1f0;
+    border: 1px solid #ffa39e;
+    border-radius: 10px;
+    padding: 1rem;
+    color: #cf1322;
+    font-size: 0.9rem;
+}
+
+.empty-box   { text-align: center; background: #f0fdf4; border-radius: 12px; padding: 2rem; }
+.empty-title { font-size: 1rem; color: #0d4a3a; font-weight: 600; margin: 0 0 0.3rem; }
+.empty-sub   { font-size: 0.85rem; color: #667085; margin: 0; }
+
+.podium-row {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 12px;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+.podium-item       { text-align: center; flex: 1; max-width: 180px; }
+.podium-item-first { max-width: 200px; }
+
+.podium-card {
+    border-radius: 12px;
+    padding: 1.25rem 1rem;
+    border-width: 2px;
+    border-style: solid;
+}
+.podium-gold {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border-color: #f59e0b;
+    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25);
+    padding: 1.5rem 1rem;
+}
+.podium-silver { background: linear-gradient(135deg, #f3f4f6, #e5e7eb); border-color: #9ca3af; }
+.podium-bronze { background: linear-gradient(135deg, #fef3e2, #fcd9a0); border-color: #cd7f32; }
+
+.podium-medal       { font-size: 2rem; margin-bottom: 6px; }
+.podium-medal-first { font-size: 2.5rem; }
+
+.podium-name  { font-size: 13px; font-weight: 700; color: #1d2939; margin: 0 0 4px; }
+.podium-badge { font-size: 11px; color: #667085; margin: 0 0 6px; }
+.podium-badge-gold   { color: #92400e; }
+.podium-points       { font-size: 1.2rem; font-weight: 800; color: #374151; margin: 0; }
+.podium-points-first { font-size: 1.5rem; color: #92400e; }
+
+.podium-base {
+    border-radius: 0 0 8px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.podium-base-gold   { background: #f59e0b; height: 70px; }
+.podium-base-silver { background: #9ca3af; height: 50px; }
+.podium-base-bronze { background: #cd7f32; height: 40px; }
+
+.podium-rank       { color: #ffffff; font-weight: 700; font-size: 18px; }
+.podium-rank-first { font-size: 22px; }
+
+.list-card {
+    background: #ffffff;
+    border: 1.5px solid #d1e8e0;
+    border-radius: 14px;
+    overflow: hidden;
+}
+.list-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #f0f9f6;
+    transition: background 0.15s ease;
+}
+.list-row:last-child { border-bottom: none; }
+.list-row:hover      { background: #f9fefb; }
+
+.rank-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f0fdf4;
+    border: 1.5px solid #d1e8e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.rank-num { font-size: 13px; font-weight: 700; color: #0d4a3a; }
+
+.list-info { flex: 1; }
+.list-name { font-size: 0.95rem; font-weight: 600; color: #1d2939; margin: 0 0 2px; }
+.list-meta { font-size: 0.78rem; color: #667085; margin: 0; }
+
+.list-points    { text-align: right; }
+.list-pts-num   { font-size: 1.1rem; font-weight: 700; color: #0d4a3a; margin: 0; }
+.list-pts-label { font-size: 0.72rem; color: #9ca3af; margin: 0; }

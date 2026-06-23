@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoConnect – Salesforce Interview Prep</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3348;
+    --accent: #22d3a5;
+    --accent2: #6366f1;
+    --accent3: #f59e0b;
+    --danger: #ef4444;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --success: #22c55e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .header-title { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
+  .header-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .header-right { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+  .progress-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* LAYOUT */
+  .layout { display: flex; height: calc(100vh - 65px); }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 240px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  .sidebar-section { padding: 16px 12px 8px; }
+  .sidebar-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    font-weight: 600;
+    padding: 0 8px;
+    margin-bottom: 6px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--muted);
+    transition: all 0.15s;
+    margin-bottom: 2px;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: rgba(34,211,165,0.1); color: var(--accent); }
+  .nav-icon { font-size: 14px; width: 20px; text-align: center; }
+  .nav-badge {
+    margin-left: auto;
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 1px 6px;
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .nav-item.active .nav-badge { background: rgba(34,211,165,0.2); color: var(--accent); }
+
+  /* MAIN CONTENT */
+  .main { flex: 1; overflow-y: auto; }
+
+  /* HOME PANEL */
+  .home-panel { padding: 32px; max-width: 900px; margin: 0 auto; }
+  .home-hero {
+    background: linear-gradient(135deg, rgba(34,211,165,0.08), rgba(99,102,241,0.08));
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 28px;
+    text-align: center;
+  }
+  .home-hero h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  .home-hero h1 span { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .home-hero p { color: var(--muted); font-size: 14px; line-height: 1.6; max-width: 500px; margin: 0 auto 20px; }
+
+  .topic-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
+  .topic-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .topic-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .topic-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .topic-card .tc-icon { font-size: 24px; margin-bottom: 10px; }
+  .topic-card .tc-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .topic-card .tc-count { font-size: 11px; color: var(--muted); }
+  .topic-card .tc-tag {
+    position: absolute; top: 10px; right: 10px;
+    font-size: 9px; padding: 2px 6px; border-radius: 10px;
+    font-weight: 600; text-transform: uppercase;
+  }
+  .tag-admin { background: rgba(34,211,165,0.15); color: var(--accent); }
+  .tag-dev { background: rgba(99,102,241,0.15); color: #818cf8; }
+
+  /* STUDY PANEL */
+  .study-panel { padding: 28px; max-width: 800px; margin: 0 auto; }
+  .panel-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+  .panel-header h2 { font-size: 20px; font-weight: 700; }
+  .back-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .back-btn:hover { color: var(--text); border-color: var(--text); }
+
+  /* ACCORDION QA */
+  .qa-section { margin-bottom: 20px; }
+  .qa-section-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent2);
+    font-weight: 600;
+    padding: 0 0 10px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+  .qa-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    transition: all 0.15s;
+  }
+  .qa-item:hover { border-color: rgba(34,211,165,0.3); }
+  .qa-question {
+    padding: 14px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .qa-question .q-icon {
+    width: 20px; height: 20px;
+    background: rgba(34,211,165,0.15);
+    color: var(--accent);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .qa-question .chevron {
+    margin-left: auto;
+    color: var(--muted);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    font-size: 12px;
+  }
+  .qa-item.open .chevron { transform: rotate(180deg); }
+  .qa-answer {
+    display: none;
+    padding: 0 16px 16px 46px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #94a3b8;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    margin-top: 0;
+  }
+  .qa-item.open .qa-answer { display: block; }
+
+  /* Answer formatting */
+  .qa-answer table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12px; }
+  .qa-answer th { background: var(--surface2); padding: 8px 10px; text-align: left; font-weight: 600; color: var(--text); border: 1px solid var(--border); }
+  .qa-answer td { padding: 7px 10px; border: 1px solid var(--border); color: #94a3b8; }
+  .qa-answer .highlight { background: rgba(34,211,165,0.08); border-left: 3px solid var(--accent); padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 10px 0; font-size: 12px; }
+  .qa-answer .code { font-family: 'JetBrains Mono', monospace; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; font-size: 11px; margin: 10px 0; color: #a5f3fc; overflow-x: auto; white-space: pre; }
+  .qa-answer ul { padding-left: 16px; margin: 8px 0; }
+  .qa-answer li { margin-bottom: 4px; }
+  .qa-answer strong { color: var(--text); font-weight: 600; }
+  .qa-answer .pill { display: inline-block; background: rgba(99,102,241,0.15); color: #818cf8; border-radius: 4px; padding: 1px 7px; font-size: 11px; font-weight: 600; }
+  .qa-answer .pill-green { background: rgba(34,211,165,0.15); color: var(--accent); }
+  .qa-answer .pill-yellow { background: rgba(245,158,11,0.15); color: var(--accent3); }
+
+  /* FLASHCARD MODE */
+  .flashcard-panel { padding: 28px; max-width: 700px; margin: 0 auto; }
+  .fc-container { perspective: 1000px; height: 280px; cursor: pointer; margin-bottom: 20px; }
+  .fc-card {
+    width: 100%; height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+  }
+  .fc-card.flipped { transform: rotateY(180deg); }
+  .fc-front, .fc-back {
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 32px;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+  .fc-front {
+    background: linear-gradient(135deg, var(--surface), var(--surface2));
+  }
+  .fc-back {
+    background: linear-gradient(135deg, rgba(34,211,165,0.08), var(--surface));
+    transform: rotateY(180deg);
+  }
+  .fc-front-text { font-size: 16px; font-weight: 600; line-height: 1.5; }
+  .fc-back-text { font-size: 14px; line-height: 1.6; color: #94a3b8; }
+  .fc-hint { font-size: 11px; color: var(--muted); margin-top: 12px; text-align: center; }
+  .fc-nav { display: flex; gap: 12px; justify-content: center; align-items: center; }
+  .fc-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .fc-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .fc-counter { font-size: 13px; color: var(--muted); }
+
+  /* QUIZ MODE */
+  .quiz-panel { padding: 28px; max-width: 680px; margin: 0 auto; }
+  .quiz-q { font-size: 16px; font-weight: 600; line-height: 1.5; margin-bottom: 24px; }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+  .quiz-opt {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.15s;
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .quiz-opt:hover:not(.answered) { border-color: var(--accent2); }
+  .quiz-opt.correct { border-color: var(--success); background: rgba(34,197,94,0.08); }
+  .quiz-opt.wrong { border-color: var(--danger); background: rgba(239,68,68,0.08); }
+  .quiz-opt .opt-label {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--surface2); display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0;
+  }
+  .quiz-progress { height: 4px; background: var(--surface2); border-radius: 2px; margin-bottom: 28px; }
+  .quiz-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; transition: width 0.4s; }
+  .quiz-explain {
+    background: rgba(34,211,165,0.06);
+    border: 1px solid rgba(34,211,165,0.2);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: #94a3b8;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .quiz-next-btn {
+    background: linear-gradient(135deg, var(--accent), #16a085);
+    color: #0f1117;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.15s;
+  }
+  .quiz-next-btn:hover { opacity: 0.9; }
+
+  /* CHEATSHEET */
+  .cheat-panel { padding: 28px; max-width: 900px; margin: 0 auto; }
+  .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .cheat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .cheat-card h3 { font-size: 13px; font-weight: 700; margin-bottom: 12px; color: var(--accent); }
+  .cheat-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 6px 0; border-bottom: 1px solid rgba(46,51,72,0.5); font-size: 12px; gap: 12px; }
+  .cheat-row:last-child { border-bottom: none; }
+  .cheat-key { color: var(--text); font-weight: 500; flex: 1; }
+  .cheat-val { color: var(--muted); flex: 1.5; text-align: right; font-size: 11px; }
+
+  /* SCORE SCREEN */
+  .score-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 28px; text-align: center; }
+  .score-circle {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    border: 4px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    margin-bottom: 24px;
+  }
+  .score-num { font-size: 36px; font-weight: 800; color: var(--accent); }
+  .score-denom { font-size: 13px; color: var(--muted); }
+
+  .hidden { display: none !important; }
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">🌿</div>
+  <div>
+    <div class="header-title">EcoConnect Interview Prep</div>
+    <div class="header-sub">Salesforce Admin + Developer Study Hub</div>
+  </div>
+  <div class="header-right">
+    <div class="progress-pill" id="progressPill">0 / 30 Reviewed</div>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Overview</div>
+      <div class="nav-item active" data-panel="home" onclick="showPanel('home', this)">
+        <span class="nav-icon">🏠</span> Home
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Study by Topic</div>
+      <div class="nav-item" data-panel="admin-basics" onclick="showPanel('admin-basics', this)">
+        <span class="nav-icon">⚙️</span> Admin Basics <span class="nav-badge">10</span>
+      </div>
+      <div class="nav-item" data-panel="security" onclick="showPanel('security', this)">
+        <span class="nav-icon">🔐</span> Security & Access <span class="nav-badge">7</span>
+      </div>
+      <div class="nav-item" data-panel="data-model" onclick="showPanel('data-model', this)">
+        <span class="nav-icon">🗃️</span> Data Model <span class="nav-badge">8</span>
+      </div>
+      <div class="nav-item" data-panel="automation" onclick="showPanel('automation', this)">
+        <span class="nav-icon">⚡</span> Automation & Flows <span class="nav-badge">6</span>
+      </div>
+      <div class="nav-item" data-panel="triggers" onclick="showPanel('triggers', this)">
+        <span class="nav-icon">🔄</span> Apex Triggers <span class="nav-badge">10</span>
+      </div>
+      <div class="nav-item" data-panel="async" onclick="showPanel('async', this)">
+        <span class="nav-icon">⏱️</span> Async Apex <span class="nav-badge">8</span>
+      </div>
+      <div class="nav-item" data-panel="lwc" onclick="showPanel('lwc', this)">
+        <span class="nav-icon">⚛️</span> LWC <span class="nav-badge">8</span>
+      </div>
+      <div class="nav-item" data-panel="testing" onclick="showPanel('testing', this)">
+        <span class="nav-icon">🧪</span> Apex Testing <span class="nav-badge">8</span>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Practice</div>
+      <div class="nav-item" data-panel="flashcards" onclick="showPanel('flashcards', this)">
+        <span class="nav-icon">🃏</span> Flashcards
+      </div>
+      <div class="nav-item" data-panel="quiz" onclick="showPanel('quiz', this)">
+        <span class="nav-icon">❓</span> Mock Quiz
+      </div>
+      <div class="nav-item" data-panel="cheatsheet" onclick="showPanel('cheatsheet', this)">
+        <span class="nav-icon">📋</span> Cheat Sheet
+      </div>
+    </div>
+  </div>
+
+  <div class="main" id="mainContent">
+    <!-- HOME -->
+    <div id="panel-home" class="home-panel">
+      <div class="home-hero">
+        <h1>Crack Your <span>Salesforce Interview</span></h1>
+        <p>Everything from your FAQ docs — organized for fast, confident revision. Admin, Triggers, Async Apex, LWC & Testing.</p>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+          <button class="quiz-next-btn" onclick="showPanel('quiz', document.querySelector('[data-panel=quiz]'))">🎯 Start Quiz</button>
+          <button class="fc-btn" onclick="showPanel('flashcards', document.querySelector('[data-panel=flashcards]'))">🃏 Flashcards</button>
+          <button class="fc-btn" onclick="showPanel('cheatsheet', document.querySelector('[data-panel=cheatsheet]'))">📋 Cheat Sheet</button>
+        </div>
+      </div>
+      <div class="topic-grid">
+        <div class="topic-card" onclick="showPanel('admin-basics', document.querySelector('[data-panel=admin-basics]'))">
+          <div style="background:linear-gradient(135deg,var(--accent),#16a085);height:2px;position:absolute;top:0;left:0;right:0;"></div>
+          <div class="tc-icon">⚙️</div>
+          <div class="tc-title">Admin Basics</div>
+          <div class="tc-count">CRM, Objects, Profiles, Records</div>
+          <div class="tc-tag tag-admin">Admin</div>
+        </div>
+        <div class="topic-card" onclick="showPanel('security', document.querySelector('[data-panel=security]'))">
+          <div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);height:2px;position:absolute;top:0;left:0;right:0;"></div>
+          <div class="tc-icon">🔐</div>
+          <div class="tc-title">Security & Access</div>
+          <div class="tc-count">OWD, Roles, Sharing, Profiles</div>
+          <div class="tc-tag tag-admin">Admin</div>
+        </div>
+        <div class="topic-card" onclick="showPanel('data-model', document.querySelector('[data-panel=data-model]'))">
+          <div style="background:linear-gradient(135deg,#f59e0b,#ef4444);height:2px;position:absolute;top:0;left:0;right:0;"></div>
+          <div class="tc-icon">🗃️</div>
+          <div class="tc-title">Data Model</div>
+          <div class="tc-count">Relationships, Rollups, Formulas</div>
+          <div class="tc-tag tag-admin">Admin</div>
+        </div>
+        <div class="topic-card" onclick="showPanel('triggers', document.querySelector('[data-panel=triggers]'))">
+          <div style="background:linear-gradient(135deg,#6366f1,#22d3a5);height:2px;position:absolute;top:0;left:0;right:0;"></div>
+          <div class="tc-icon">🔄</div>
+          <div class="tc-title">Apex Triggers</div>
+          <div class="tc-count">Context vars, Bulkification, Best practices</div>
+          <div class="tc-tag tag-dev">Dev</div>
+        </div>
+        <div class="topic-card" onclick="showPanel('async', document.querySelector('[data-panel=async]'))">
+          <div style="background:linear-gradient(135deg,#22d3a5,#6366f1);height:2px;position:absolute;top:0;left:0;right:0;"></div>
+          <div class="tc-icon">⏱️</div>
+          <div class="tc-title">Async Apex</div>
+          <div class="tc-count">Future, Queueable, Batch, Scheduled</div>
+          <div class="tc-tag tag-dev">Dev</div>
+        </div>
+        <div class="topic-card" onclick="showPanel('lwc', document.querySelector('[data-panel=lwc]'))">
+          <div style="background:linear-gradient(135deg,#f59e0b,#6366f1);height:2px;position:absolute;top:0;left:0;right:0;"></div>
+          <div class="tc-icon">⚛️</div>
+          <div class="tc-title">LWC</div>
+          <div class="tc-count">Decorators, Lifecycle, Communication</div>
+          <div class="tc-tag tag-dev">Dev</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN BASICS PANEL -->
+    <div id="panel-admin-basics" class="study-panel hidden">
+      <div class="panel-header">
+        <button class="back-btn" onclick="showPanel('home', document.querySelector('[data-panel=home]'))">← Back</button>
+        <h2>⚙️ Admin Basics</h2>
+      </div>
+      <div class="qa-section">
+        <div class="qa-section-title">Salesforce Fundamentals</div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is CRM and what is Salesforce? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <strong>CRM (Customer Relationship Management)</strong> is software that helps organizations manage customer data, track interactions, and improve relationships.<br><br>
+            <strong>Salesforce CRM</strong> is a cloud-based CRM platform. Users log in via username/password. It includes built-in apps like <strong>Sales Cloud</strong> and <strong>Service Cloud</strong>, plus features like Flows, Approval Processes, Validation Rules, Formulas, and Web-to-Lead.<br><br>
+            <div class="highlight">💡 Key point: Salesforce is also a <strong>PaaS (Platform as a Service)</strong> — you can build custom apps on top of it.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>Difference between Sales Cloud and Service Cloud? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <table>
+              <tr><th>Sales Cloud</th><th>Service Cloud</th></tr>
+              <tr><td>Manages sales operations</td><td>Manages customer service / help desk</td></tr>
+              <tr><td>Objects: Leads, Accounts, Contacts, Opportunities</td><td>Objects: Cases, Accounts, Contacts</td></tr>
+              <tr><td>Features: Web-to-Lead, Lead Assignment Rules, Sales Processes</td><td>Features: Omni-Channel, Case Assignment Rules, Service Processes</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What are the key Standard Objects and their purpose? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <table>
+              <tr><th>Object</th><th>Purpose</th></tr>
+              <tr><td><strong>Lead</strong></td><td>Potential customer before qualification (Sales Cloud)</td></tr>
+              <tr><td><strong>Account</strong></td><td>A company or organization you do business with</td></tr>
+              <tr><td><strong>Contact</strong></td><td>Individual person linked to an Account</td></tr>
+              <tr><td><strong>Opportunity</strong></td><td>A potential sales deal / revenue pipeline (Sales Cloud)</td></tr>
+              <tr><td><strong>Case</strong></td><td>Customer service request or complaint (Service Cloud)</td></tr>
+              <tr><td><strong>User</strong></td><td>Person who uses Salesforce; stores employee details and controls access</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is a Profile? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            A <strong>Profile</strong> controls what a user <em>can do</em> in Salesforce. It defines:<br><br>
+            <ul>
+              <li>Object-level access (Create, Read, Edit, Delete)</li>
+              <li>Field-Level Security (FLS)</li>
+              <li>Apps and Tabs visible</li>
+              <li>Login IP ranges and hours</li>
+            </ul>
+            <div class="highlight">Examples: <em>Standard User</em>, <em>System Administrator</em>, <em>Chatter Free</em></div>
+            <strong>Tab permissions:</strong> Default On | Default Off | Tab Hidden
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is a Permission Set vs Permission Set Group? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <strong>Permission Set:</strong> Grants <em>additional</em> permissions to a user without changing their profile. Used to extend access for specific users.<br><br>
+            <strong>Permission Set Group:</strong> A collection of multiple Permission Sets bundled together for easier bulk assignment.<br><br>
+            <div class="highlight">💡 Think of Profile as the baseline and Permission Sets as top-ups.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is a Record Type? When is it used? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <strong>Record Type</strong> allows you to:<br>
+            <ul>
+              <li>Display <strong>different picklist options</strong> based on profile</li>
+              <li>Display <strong>different page layouts</strong> based on profile</li>
+            </ul>
+            <div class="highlight">Example: To display different Opportunity Stage values for different sales teams → use Record Type + Sales Processes.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What happens when a Lead is converted? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            When a Lead is converted:<br><br>
+            <ul>
+              <li>✅ An <strong>Account</strong> is created</li>
+              <li>✅ A <strong>Contact</strong> is created</li>
+              <li>✅ An <strong>Opportunity</strong> is <em>optionally</em> created</li>
+            </ul>
+            <div class="highlight">Converted leads are NOT visible in the Lead tab — they can only be accessed via reports.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What are Reports and Dashboards? Types? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <strong>Report Formats:</strong><br>
+            <ul>
+              <li><strong>Tabular</strong> – Simple rows and columns (like a spreadsheet)</li>
+              <li><strong>Summary</strong> – Groups of data with subtotals</li>
+              <li><strong>Matrix</strong> – Groups rows AND columns</li>
+              <li><strong>Joined</strong> – Multiple report blocks in one</li>
+            </ul>
+            <br>
+            <strong>Dashboard:</strong> Visual representation of one or more reports. Max <strong>20 components</strong>.<br><br>
+            <strong>Dynamic Dashboard:</strong> Shows data based on the <em>viewer's</em> permissions — set via "Runs as the logged-in user (Dashboard Viewer)".
+            <div class="highlight">⚠️ Report Type ≠ Report Format. Report Type defines which objects/fields are available.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>Data Import Wizard vs Data Loader – differences? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <table>
+              <tr><th>Feature</th><th>Data Import Wizard</th><th>Data Loader</th></tr>
+              <tr><td>Interface</td><td>Browser-based UI</td><td>Desktop application</td></tr>
+              <tr><td>Record Limit</td><td>Up to 50,000</td><td>Up to 5 million</td></tr>
+              <tr><td>Objects</td><td>Limited standard + all custom</td><td>Almost all objects</td></tr>
+              <tr><td>Operations</td><td>Insert, Update, Upsert</td><td>Insert, Update, Upsert, Delete, Export</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is a Validation Rule? Give an example. <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            A <strong>Validation Rule</strong> ensures data quality. It evaluates a formula — if it returns <strong>TRUE</strong>, the rule fires and shows an error message.<br><br>
+            <strong>Examples:</strong>
+            <div class="code">/* Close date cannot be in future */
+CloseDate > TODAY()
+
+/* Required picklist value */
+ISPICKVAL(StageName, "Closed Won")
+
+/* Field must not be blank */
+ISBLANK(Text_Field__c)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECURITY PANEL -->
+    <div id="panel-security" class="study-panel hidden">
+      <div class="panel-header">
+        <button class="back-btn" onclick="showPanel('home', document.querySelector('[data-panel=home]'))">← Back</button>
+        <h2>🔐 Security & Access</h2>
+      </div>
+      <div class="qa-section">
+        <div class="qa-section-title">Salesforce Security Model (4 Layers)</div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is OWD (Organization-Wide Defaults)? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            OWD defines the <strong>baseline access level</strong> for records a user doesn't own. It's the most restrictive layer.<br><br>
+            <strong>Options:</strong>
+            <ul>
+              <li><span class="pill-green pill">Private</span> – Only record owner and above in hierarchy</li>
+              <li><span class="pill pill">Public Read Only</span> – Everyone can see, only owner can edit</li>
+              <li><span class="pill-yellow pill">Public Read/Write</span> – Everyone can see and edit</li>
+              <li>Public Read/Write/Transfer – Plus can transfer ownership</li>
+              <li>Controlled by Parent – Child follows parent's sharing</li>
+            </ul>
+            <div class="highlight">💡 Always set OWD as restrictive as possible, then open up with Role Hierarchy and Sharing Rules.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is Role Hierarchy? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            Role Hierarchy gives users <strong>higher in the hierarchy</strong> access to records owned by users <strong>below them</strong>.<br><br>
+            <div class="highlight">Can be disabled for custom objects using the "Grant Access Using Hierarchy" checkbox in Sharing Settings.</div>
+            <strong>Important:</strong> Role ≠ Profile. Profile controls <em>what</em> you can do. Role controls <em>what records</em> you can see.
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What are Sharing Rules? When are they used? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <strong>Sharing Rules</strong> grant access to records that are restricted by OWD. They can share based on:<br>
+            <ul>
+              <li><strong>Record Owner</strong> – Who owns the record</li>
+              <li><strong>Criteria</strong> – Field values on the record</li>
+            </ul>
+            You can share with: <strong>Public Groups</strong>, <strong>Roles</strong>, or <strong>Roles and Subordinates</strong>.
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>Queues vs Public Groups – what's the difference? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <table>
+              <tr><th>Queues</th><th>Public Groups</th></tr>
+              <tr><td>Used for load balancing</td><td>Used in sharing rules, folder access</td></tr>
+              <tr><td>Can <strong>own records</strong> (Lead, Case, Custom objects)</td><td>Cannot own records</td></tr>
+              <tr><td>Visible as record owners in list views</td><td>Used in email alerts and sharing rules</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>View All vs Modify All — difference? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <strong>View All</strong> – Regardless of sharing settings, user can <strong>see</strong> all records of that object (overrides OWD).<br><br>
+            <strong>Modify All</strong> – Regardless of sharing settings, user can <strong>see, edit, delete, and transfer</strong> all records of that object.<br><br>
+            <div class="highlight">These are set at the Profile level and bypass the entire sharing model.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is a Restriction Rule? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            A <strong>Restriction Rule</strong> filters records based on specific criteria, making access <strong>more restrictive</strong> (not more permissive). It works on top of existing sharing settings.<br><br>
+            <div class="highlight">Use case: Even if OWD is Public Read/Write, a Restriction Rule can hide records that don't match a user's criteria.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is a Lookup Filter? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            A <strong>Lookup Filter</strong> restricts the list of records available in a <strong>lookup field</strong>. It ensures users only see relevant records when selecting from a lookup.<br><br>
+            <div class="highlight">Example: On the Case object, filter the Contact lookup to only show Contacts linked to the selected Account.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DATA MODEL PANEL -->
+    <div id="panel-data-model" class="study-panel hidden">
+      <div class="panel-header">
+        <button class="back-btn" onclick="showPanel('home', document.querySelector('[data-panel=home]'))">← Back</button>
+        <h2>🗃️ Data Model & Relationships</h2>
+      </div>
+      <div class="qa-section">
+        <div class="qa-section-title">Object Relationships</div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>Lookup vs Master-Detail — core differences? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <table>
+              <tr><th>Feature</th><th>Lookup</th><th>Master-Detail</th></tr>
+              <tr><td>Coupling</td><td>Loosely coupled</td><td>Strongly coupled</td></tr>
+              <tr><td>Child without parent?</td><td>✅ Yes, child can exist alone</td><td>❌ No, parent is required</td></tr>
+              <tr><td>Cascade Delete</td><td>No</td><td>✅ Yes — delete master deletes all children</td></tr>
+              <tr><td>Sharing</td><td>Parent & child can have different owners</td><td>Child sharing is controlled by parent</td></tr>
+              <tr><td>Roll-Up Summary</td><td>❌ Not available</td><td>✅ Available on master object</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>How to convert Lookup to Master-Detail? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <strong>Steps:</strong><br>
+            <ul>
+              <li>1. Ensure <strong>all child records</strong> have a parent (no blank lookup fields)</li>
+              <li>2. Go to <strong>Object Manager → Fields & Relationships</strong></li>
+              <li>3. Edit the Lookup field → Change type to <strong>Master-Detail</strong></li>
+            </ul>
+            <div class="highlight">Salesforce will only allow conversion if no child records have an empty parent field.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is a Junction Object and when do you use it? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            A <strong>Junction Object</strong> creates a <strong>many-to-many (M:M)</strong> relationship between two objects using two Master-Detail relationships.<br><br>
+            <div class="highlight">Example: A Student can enroll in many Courses. A Course can have many Students.<br>→ Junction Object: <strong>Enrollment</strong> (with M-D to Student and M-D to Course)</div>
+            <br>For EcoConnect: <strong>Volunteer ↔ Initiative</strong> via a <em>Volunteer_Assignment__c</em> junction object.
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is a Roll-Up Summary Field? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            A <strong>Roll-Up Summary</strong> field is created on the <strong>master object</strong> in a Master-Detail relationship. It aggregates data from child records.<br><br>
+            <strong>Functions available:</strong> COUNT, SUM, MIN, MAX<br><br>
+            <div class="highlight">Example: On the Account (master), a Roll-Up Summary counts the total number of Cases (children).</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is a Cross-Object Formula? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            A <strong>Cross-Object Formula</strong> references fields from a <strong>parent object</strong> in a formula field on the child.<br><br>
+            <div class="highlight">Example: On the Contact object, a formula field that shows <code>Account.Industry</code> — this is a cross-object formula referencing the parent Account.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is an External ID? What field types support it? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            An <strong>External ID</strong> is a field that stores a unique identifier from an external system (ERP, database). Used for:<br>
+            <ul>
+              <li>Integrating Salesforce with other systems</li>
+              <li><strong>Upsert</strong> operations (update if exists, insert if not)</li>
+              <li>Searching records using external values</li>
+            </ul>
+            <strong>Supported field types:</strong> Text, Number, Email<br>
+            <div class="highlight">Check the "External ID" checkbox when creating the custom field.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>Custom Settings vs Custom Metadata — when to use each? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <table>
+              <tr><th>Feature</th><th>Custom Settings</th><th>Custom Metadata</th></tr>
+              <tr><td>Deployable?</td><td>❌ Data not included in deployments</td><td>✅ Records deploy with metadata</td></tr>
+              <tr><td>Accessible in Formulas?</td><td>Limited</td><td>✅ Yes</td></tr>
+              <tr><td>Types</td><td>List, Hierarchy</td><td>Single type, many records</td></tr>
+              <tr><td>Use case</td><td>App config data per user/profile</td><td>Config that must travel between orgs</td></tr>
+            </table>
+            <div class="highlight">💡 Prefer Custom Metadata for config data you need to deploy (e.g., tax rates, routing rules for EcoConnect).</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What are all the relationship types in Salesforce? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <ul>
+              <li><strong>Lookup</strong> – Loose; child can exist without parent</li>
+              <li><strong>Master-Detail</strong> – Tight; child depends on parent; supports rollups</li>
+              <li><strong>Self-Relationship</strong> – Lookup to the same object (e.g., Account → Account for parent accounts)</li>
+              <li><strong>Hierarchical</strong> – Lookup on the <strong>User object</strong> to itself (e.g., Manager field)</li>
+              <li><strong>Many-to-Many</strong> – Via a Junction Object (two M-D relationships)</li>
+              <li><strong>External Lookup</strong> – Links to an external data source using external ID</li>
+              <li><strong>Indirect Lookup</strong> – Links standard/custom object to an external object using a unique key</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUTOMATION PANEL -->
+    <div id="panel-automation" class="study-panel hidden">
+      <div class="panel-header">
+        <button class="back-btn" onclick="showPanel('home', document.querySelector('[data-panel=home]'))">← Back</button>
+        <h2>⚡ Automation & Flows</h2>
+      </div>
+      <div class="qa-section">
+        <div class="qa-section-title">Salesforce Automation Tools</div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is a Flow? What are the types? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <strong>Flow</strong> is Salesforce's declarative automation tool to automate repeated business activities.<br><br>
+            <strong>Types:</strong>
+            <ul>
+              <li><span class="pill pill">Screen Flow</span> – Interactive UI for users (like a wizard)</li>
+              <li><span class="pill-green pill">Record-Triggered Flow</span> – Runs automatically when a record is created/updated/deleted</li>
+              <li><span class="pill pill">Auto-Launched Flow</span> – Runs in background, no UI</li>
+              <li><span class="pill-yellow pill">Scheduled Flow</span> – Runs at a specific time</li>
+              <li><span class="pill pill">Platform Event-Triggered Flow</span> – Triggered by platform events</li>
+            </ul>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What context does a Record-Triggered Flow run in? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            Record-Triggered Flows run in <strong>System Context</strong> by default — meaning they have access to all records and bypass sharing rules.<br><br>
+            <div class="highlight">This is why you must be careful about what data operations you perform in a Record-Triggered Flow — users may not intend to share data that the flow touches.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What are the ways to invoke/trigger a Flow? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            Flows can be invoked via:<br>
+            <ul>
+              <li>🔘 <strong>Button</strong> on a record page</li>
+              <li>💻 <strong>Apex code</strong> (programmatically)</li>
+              <li>🔧 <strong>Process Builder</strong> (legacy)</li>
+              <li>🔀 <strong>Subflow</strong> (from another Flow)</li>
+              <li>📝 <strong>Record Changes</strong> (Record-Triggered Flow)</li>
+              <li>📅 <strong>Schedule</strong> (Scheduled Flow)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is Field Dependency? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <strong>Field Dependency</strong> links a <em>Controlling Field</em> to a <em>Dependent Picklist</em>. The values available in the dependent picklist change based on what's selected in the controlling field.<br><br>
+            <div class="highlight">Example in EcoConnect: If Issue Type = "Pollution", then Sub-Type picklist shows "Air", "Water", "Soil". If Issue Type = "Dumping", it shows different options.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>How do you auto-assign Leads or Cases? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            Use <strong>Assignment Rules</strong>:<br>
+            <ul>
+              <li>Go to Setup → Lead Assignment Rules (or Case Assignment Rules)</li>
+              <li>Define criteria (e.g., Region = "Chennai")</li>
+              <li>Assign to a specific <strong>User</strong> or <strong>Queue</strong></li>
+            </ul>
+            <div class="highlight">Only one Assignment Rule can be active at a time per object.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What are Auto-Launched Flows? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <strong>Auto-Launched Flows</strong> run in the background with <strong>no screen interactions</strong> (no UI elements). They can be triggered:<br>
+            <ul>
+              <li>From Apex code</li>
+              <li>From another Flow as a subflow</li>
+              <li>From a REST API call</li>
+              <li>From Process Builder (legacy)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRIGGERS PANEL -->
+    <div id="panel-triggers" class="study-panel hidden">
+      <div class="panel-header">
+        <button class="back-btn" onclick="showPanel('home', document.querySelector('[data-panel=home]'))">← Back</button>
+        <h2>🔄 Apex Triggers</h2>
+      </div>
+      <div class="qa-section">
+        <div class="qa-section-title">Core Trigger Concepts</div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is the difference between Trigger.new and Trigger.old? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <table>
+              <tr><th>Variable</th><th>Contains</th><th>Available in</th></tr>
+              <tr><td><code>Trigger.new</code></td><td>New/updated version of records</td><td>insert, update, undelete</td></tr>
+              <tr><td><code>Trigger.old</code></td><td>Previous version of records</td><td>update, delete</td></tr>
+              <tr><td><code>Trigger.newMap</code></td><td>Map of Id → new record</td><td>update (before & after), after insert</td></tr>
+              <tr><td><code>Trigger.oldMap</code></td><td>Map of Id → old record</td><td>update, delete</td></tr>
+            </table>
+            <div class="highlight">💡 Use Maps when you need to look up records by ID efficiently — avoids SOQL inside loops.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>Before trigger vs After trigger — key difference? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <strong>Before Trigger:</strong>
+            <ul>
+              <li>Fires <em>before</em> the record is saved to the database</li>
+              <li>You can <strong>modify Trigger.new fields directly</strong> without a separate DML statement</li>
+              <li>Use for: validation, field updates before save</li>
+            </ul>
+            <strong>After Trigger:</strong>
+            <ul>
+              <li>Fires <em>after</em> the record is saved — the record now has an ID</li>
+              <li>Cannot modify Trigger.new — need a separate DML (update) to change the record</li>
+              <li>Use for: related record creation, callouts</li>
+            </ul>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is Bulkification? Why does it matter? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <strong>Bulkification</strong> means writing trigger code that can handle <strong>200 records at once</strong> efficiently (the max batch size Salesforce sends to a trigger).<br><br>
+            <strong>Bad pattern (NOT bulkified):</strong>
+            <div class="code">for(Case c : Trigger.new) {
+  // SOQL inside loop = governor limit hit!
+  Account a = [SELECT Id FROM Account WHERE Id = :c.AccountId];
+}</div>
+            <strong>Good pattern (bulkified):</strong>
+            <div class="code">// Collect all IDs first
+Set&lt;Id&gt; accIds = new Set&lt;Id&gt;();
+for(Case c : Trigger.new) { accIds.add(c.AccountId); }
+
+// One SOQL outside the loop
+Map&lt;Id, Account&gt; accMap = new Map&lt;Id, Account&gt;(
+  [SELECT Id, Name FROM Account WHERE Id IN :accIds]
+);</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is a Recursive Trigger? How do you prevent it? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            A <strong>Recursive Trigger</strong> is when a trigger fires, makes a DML operation, which fires the trigger again — creating an infinite loop.<br><br>
+            <strong>Prevention: Use a static Boolean variable</strong>
+            <div class="code">public class TriggerHelper {
+  public static Boolean hasRun = false;
+}
+
+// In trigger:
+if(!TriggerHelper.hasRun) {
+  TriggerHelper.hasRun = true;
+  // your logic here
+}</div>
+            <div class="highlight">Static variables reset between transactions but persist within the same transaction.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is the "One Trigger Per Object" rule? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            Best practice: have <strong>only one trigger per object</strong>. Put all logic in a <strong>handler/helper class</strong>.<br><br>
+            <strong>Why?</strong> When multiple triggers exist on the same object, Salesforce doesn't guarantee execution order. One trigger could conflict with another.<br><br>
+            <div class="code">// Thin trigger — just calls the handler
+trigger CaseTrigger on Case (before insert, after update) {
+  CaseTriggerHandler.handle(Trigger.operationType);
+}</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is the Order of Execution in Salesforce? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            When a record is saved, Salesforce processes in this order:<br>
+            <ol style="padding-left:16px;margin-top:8px;">
+              <li>System validation (required fields, data type)</li>
+              <li><strong>Before triggers</strong></li>
+              <li>Custom validation rules</li>
+              <li>Record saved to database (not committed)</li>
+              <li><strong>After triggers</strong></li>
+              <li>Assignment Rules</li>
+              <li>Auto-response Rules</li>
+              <li>Workflow Rules (legacy)</li>
+              <li>Processes / Flows</li>
+              <li>Escalation Rules</li>
+              <li>Database committed (transaction committed)</li>
+            </ol>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>Can an Apex Trigger perform a Web Service callout directly? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <strong>No.</strong> You cannot make a synchronous callout from a trigger — it would block the transaction.<br><br>
+            <strong>Solution:</strong> Use <span class="pill-green pill">@future(callout=true)</span> or <span class="pill pill">Queueable Apex</span> (implements <code>Database.AllowsCallouts</code>) to make the callout asynchronously.
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What are key Governor Limits for triggers? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <table>
+              <tr><th>Limit</th><th>Value</th></tr>
+              <tr><td>SOQL queries per transaction</td><td>100</td></tr>
+              <tr><td>DML statements per transaction</td><td>150</td></tr>
+              <tr><td>Records per DML operation</td><td>10,000</td></tr>
+              <tr><td>CPU time per transaction</td><td>10,000ms (sync), 60,000ms (async)</td></tr>
+              <tr><td>Heap size</td><td>6MB (sync), 12MB (async)</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>How do you use addError() in a trigger? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <code>addError()</code> prevents record save and shows an error message to the user — without throwing an exception.<br><br>
+            <div class="code">trigger PreventDeleteCase on Case (before delete) {
+  for(Case c : Trigger.old) {
+    if(c.Status == 'Open') {
+      c.addError('Cannot delete an open Case!');
+    }
+  }
+}</div>
+            <div class="highlight">addError() marks the specific record as failed in bulk operations, allowing other records to succeed if using partial success.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What are Static Variables and how do they behave in bulk uploads? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            Static variables persist for the <strong>entire transaction</strong> (not just one trigger execution). In bulk uploads via Data Loader:<br><br>
+            <ul>
+              <li>Data Loader sends records in <strong>batches of 200</strong></li>
+              <li>Each batch is a <strong>separate transaction</strong></li>
+              <li>So static variables reset between batches</li>
+            </ul>
+            <div class="highlight">⚠️ If you use a static Boolean to prevent recursion, it works within one batch but resets for the next batch.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ASYNC PANEL -->
+    <div id="panel-async" class="study-panel hidden">
+      <div class="panel-header">
+        <button class="back-btn" onclick="showPanel('home', document.querySelector('[data-panel=home]'))">← Back</button>
+        <h2>⏱️ Asynchronous Apex</h2>
+      </div>
+      <div class="qa-section">
+        <div class="qa-section-title">The 4 Async Patterns</div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>When do you use each async type? (Quick Selection Guide) <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <table>
+              <tr><th>Need</th><th>Use</th></tr>
+              <tr><td>Simple async task, minimal params</td><td><span class="pill-green pill">@future Method</span></td></tr>
+              <tr><td>Complex params, job monitoring, chaining</td><td><span class="pill pill">Queueable Apex</span></td></tr>
+              <tr><td>Millions of records</td><td><span class="pill-yellow pill">Batch Apex</span></td></tr>
+              <tr><td>Time-based / nightly processing</td><td><span class="pill pill">Scheduled Apex</span></td></tr>
+              <tr><td>External API callout from trigger</td><td><span class="pill-green pill">@future(callout=true)</span></td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>Future Methods — rules and limitations? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <div class="code">@future(callout=true)
+public static void sendToExternalSystem(List&lt;Id&gt; recordIds) {
+  // async logic here
+}</div>
+            <strong>Rules:</strong>
+            <ul>
+              <li>Must be <strong>static</strong> and return <strong>void</strong></li>
+              <li>Only <strong>primitive parameter types</strong> (String, Integer, List&lt;Id&gt;) — no sObjects</li>
+              <li><strong>Cannot call another @future</strong> from a @future method</li>
+              <li>No job monitoring / no Job ID</li>
+              <li>Max 50 future calls per transaction</li>
+            </ul>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>Queueable Apex — advantages over @future? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <strong>Queueable</strong> implements the <code>Queueable</code> interface and is enqueued with <code>System.enqueueJob()</code>.<br><br>
+            <strong>Key advantages:</strong>
+            <ul>
+              <li>✅ Accepts <strong>complex parameters</strong> (sObjects, custom types)</li>
+              <li>✅ Returns a <strong>Job ID</strong> for monitoring</li>
+              <li>✅ Supports <strong>job chaining</strong> (one Queueable can enqueue another)</li>
+              <li>✅ Supports <strong>callouts</strong> via <code>Database.AllowsCallouts</code></li>
+            </ul>
+            <div class="highlight">💡 Queueable is the modern recommended async pattern for most use cases.</div>
+            Max chaining depth: <strong>5 levels</strong>.
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>Batch Apex — how does it work? Key limits? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            Batch Apex implements <code>Database.Batchable&lt;SObject&gt;</code> with 3 methods:<br><br>
+            <ul>
+              <li><strong>start()</strong> – Returns a QueryLocator or Iterable; collects records to process</li>
+              <li><strong>execute()</strong> – Processes each batch; governor limits reset per batch</li>
+              <li><strong>finish()</strong> – Runs after all batches complete</li>
+            </ul>
+            <table>
+              <tr><th>Limit</th><th>Value</th></tr>
+              <tr><td>Default batch size</td><td>200 records</td></tr>
+              <tr><td>Max batch size</td><td>2,000 records</td></tr>
+              <tr><td>QueryLocator max records</td><td>50 million</td></tr>
+            </table>
+            <strong>Database.Stateful</strong> – Implement this to preserve variables across batches (for counters/aggregations).
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>Scheduled Apex — cron syntax? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            Implements <code>Schedulable</code> interface. Schedule using:<br>
+            <div class="code">System.schedule('Job Name', '0 0 2 * * ?', new MyScheduler());</div>
+            <strong>Cron format:</strong> <code>Seconds Minutes Hours Day Month DayOfWeek [Year]</code><br><br>
+            <ul>
+              <li><code>0 0 2 * * ?</code> → Every day at 2:00 AM</li>
+              <li><code>0 30 8 ? * MON-FRI</code> → 8:30 AM on weekdays</li>
+            </ul>
+            <div class="highlight">Common pattern: Scheduled Apex calls Batch Apex or Queueable inside execute().</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>Async Apex comparison — all 4 types? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <table>
+              <tr><th>Feature</th><th>Future</th><th>Queueable</th><th>Batch</th><th>Scheduled</th></tr>
+              <tr><td>Complex params</td><td>❌</td><td>✅</td><td>✅</td><td>✅</td></td></tr>
+              <tr><td>Callout support</td><td>✅</td><td>✅</td><td>✅</td><td>Indirect</td></tr>
+              <tr><td>Job chaining</td><td>❌</td><td>✅ (5 deep)</td><td>✅</td><td>Indirect</td></tr>
+              <tr><td>Large data volume</td><td>❌</td><td>❌</td><td>✅ (50M)</td><td>Via Batch</td></tr>
+              <tr><td>Job monitoring</td><td>❌</td><td>✅ Job ID</td><td>✅ Job ID</td><td>✅ Job ID</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>Can a future method call another future method? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <strong>No.</strong> This is a hard platform limit. Calling a @future method from another @future method results in a <strong>runtime exception</strong>.<br><br>
+            <div class="highlight">If you need sequential async jobs → use <strong>Queueable chaining</strong> instead.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>How do you enable callouts in Batch Apex? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            Implement <code>Database.AllowsCallouts</code> on the batch class:<br>
+            <div class="code">public class MyBatch implements 
+  Database.Batchable&lt;SObject&gt;,
+  Database.AllowsCallouts {
+  
+  // Now you can make HTTP callouts in execute()
+}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LWC PANEL -->
+    <div id="panel-lwc" class="study-panel hidden">
+      <div class="panel-header">
+        <button class="back-btn" onclick="showPanel('home', document.querySelector('[data-panel=home]'))">← Back</button>
+        <h2>⚛️ Lightning Web Components</h2>
+      </div>
+      <div class="qa-section">
+        <div class="qa-section-title">LWC Architecture & Core Concepts</div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What are the files in an LWC component? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            Every LWC consists of (at most) 4 files:<br><br>
+            <ul>
+              <li>📄 <strong>HTML</strong> – Template markup with data bindings and directives (required)</li>
+              <li>📜 <strong>JavaScript</strong> – Component logic, state, lifecycle hooks (required)</li>
+              <li>🎨 <strong>CSS</strong> – Scoped styles (optional)</li>
+              <li>⚙️ <strong>Meta XML</strong> – Exposes component to Salesforce platform (optional but common)</li>
+            </ul>
+            <div class="highlight">Only HTML and JS are required.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What are the LWC Lifecycle Hooks in order? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <table>
+              <tr><th>Hook</th><th>When it runs</th><th>Common use</th></tr>
+              <tr><td><code>constructor()</code></td><td>When component is created</td><td>Initialize properties, call super()</td></tr>
+              <tr><td><code>connectedCallback()</code></td><td>When inserted into DOM</td><td>Fetch data, subscribe to events</td></tr>
+              <tr><td><code>renderedCallback()</code></td><td>After every render</td><td>DOM manipulation</td></tr>
+              <tr><td><code>disconnectedCallback()</code></td><td>When removed from DOM</td><td>Clean up event listeners</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What are the 3 LWC Decorators? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <strong>@api</strong> – Exposes a public property/method. Enables <strong>parent → child</strong> communication.
+            <div class="code">@api recordId;</div>
+            <strong>@track</strong> – Makes object properties reactive; LWC detects nested changes and re-renders.
+            <div class="code">@track account = {};</div>
+            <strong>@wire</strong> – Reactive data service. Auto-refreshes when source data changes.
+            <div class="code">@wire(getRecord, { recordId: '$recordId' }) record;</div>
+            <div class="highlight">💡 For simple primitive properties, @track is not needed — LWC is reactive by default for primitives.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>@wire vs Imperative Apex call — when to use each? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <strong>@wire (Reactive):</strong>
+            <div class="code">import getAccounts from '@salesforce/apex/AccountController.getAccounts';
+@wire(getAccounts) accounts;</div>
+            Use when: data should auto-refresh when input changes. Requires <code>cacheable=true</code> in Apex.<br><br>
+            <strong>Imperative (On-Demand):</strong>
+            <div class="code">getAccounts()
+  .then(result => { this.accounts = result; })
+  .catch(error => { this.error = error; });</div>
+            Use when: triggered by user action (button click), when you need to pass data back, or when not cacheable.
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>Component Communication patterns in LWC? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <table>
+              <tr><th>Direction</th><th>Mechanism</th></tr>
+              <tr><td>Parent → Child</td><td>Pass data via <code>@api</code> property or call a child's <code>@api</code> method</td></tr>
+              <tr><td>Child → Parent</td><td>Dispatch a <code>CustomEvent</code>; parent listens with <code>onsave={handler}</code></td></tr>
+              <tr><td>Unrelated components</td><td><strong>Lightning Message Service (LMS)</strong> — works across LWC, Aura, and Visualforce</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is Lightning Data Service (LDS)? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <strong>LDS</strong> allows CRUD operations <strong>without writing Apex</strong>. It:<br>
+            <ul>
+              <li>Automatically respects sharing rules and FLS</li>
+              <li>Uses optimized client-side caching</li>
+              <li>Provides: <code>createRecord()</code>, <code>updateRecord()</code>, <code>deleteRecord()</code></li>
+            </ul>
+            <div class="highlight">Use LDS when possible — it's faster, more secure, and reduces maintenance vs custom Apex.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>for:each vs lwc:if — how do they work in templates? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <strong>Iteration:</strong>
+            <div class="code">&lt;template for:each={accounts} for:item="acc"&gt;
+  &lt;p key={acc.Id}&gt;{acc.Name}&lt;/p&gt;
+&lt;/template&gt;</div>
+            Always provide a unique <code>key</code> — Salesforce uses it for efficient re-rendering.<br><br>
+            <strong>Conditional:</strong>
+            <div class="code">&lt;template lwc:if={showData}&gt;Data Available&lt;/template&gt;
+&lt;template lwc:else&gt;No Data&lt;/template&gt;</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What does cacheable=true mean in Apex for LWC? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <code>cacheable=true</code> is required on an Apex method when using <code>@wire</code>. It tells Salesforce the method is safe to cache — results may be served from cache.<br><br>
+            <div class="code">@AuraEnabled(cacheable=true)
+public static List&lt;Account&gt; getAccounts() {
+  return [SELECT Id, Name FROM Account];
+}</div>
+            <div class="highlight">⚠️ Omit cacheable=true for imperative calls. If the method performs DML, it cannot be cached.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TESTING PANEL -->
+    <div id="panel-testing" class="study-panel hidden">
+      <div class="panel-header">
+        <button class="back-btn" onclick="showPanel('home', document.querySelector('[data-panel=home]'))">← Back</button>
+        <h2>🧪 Apex Testing</h2>
+      </div>
+      <div class="qa-section">
+        <div class="qa-section-title">Core Test Concepts</div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is the 75% code coverage requirement? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <ul>
+              <li>Salesforce requires <strong>at least 75%</strong> code coverage to deploy Apex to <strong>production</strong></li>
+              <li>Individual triggers must have <strong>at least 1%</strong> coverage (but 75% org-wide is enforced)</li>
+              <li>In <strong>sandbox</strong>, deployment doesn't require coverage</li>
+            </ul>
+            <div class="highlight">⚠️ Coverage is measured per class. A test with no assertions but that executes all lines still counts — but assertions are best practice.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is @isTest, Test.startTest(), Test.stopTest()? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <strong>@isTest</strong> – Marks a class or method as a test; not counted toward code coverage; not deployed to production.<br><br>
+            <strong>Test.startTest()</strong> – Resets governor limits for code inside the block. Only <strong>1 startTest/stopTest pair</strong> per test method.<br><br>
+            <strong>Test.stopTest()</strong> – Ends the test context and forces async operations (like @future) to complete.<br><br>
+            <div class="code">@isTest
+static void testMyMethod() {
+  // Setup data
+  Account a = new Account(Name='Test');
+  insert a;
+
+  Test.startTest();
+  MyClass.doSomething(a.Id); // fresh governor limits here
+  Test.stopTest();
+
+  // Assert after stopTest (async has completed)
+  Account result = [SELECT Name FROM Account WHERE Id = :a.Id];
+  System.assertEquals('Updated', result.Name);
+}</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is SeeAllData and when should you use it? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            By default, test methods use <strong>SeeAllData=false</strong> — they cannot see existing org data; they must create their own test data.<br><br>
+            To allow access to existing data: <code>@isTest(SeeAllData=true)</code><br><br>
+            <div class="highlight">⚠️ Avoid SeeAllData=true — tests become dependent on live data and can fail unpredictably. It also impacts deployment performance. Always create test data explicitly.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is a Test Data Factory and why is it best practice? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            A <strong>Test Data Factory</strong> is a utility class (marked @isTest) that creates standardized test records for use across multiple test classes.<br><br>
+            <strong>Why use it:</strong>
+            <ul>
+              <li>Centralize data creation — change in one place</li>
+              <li>Reduce code duplication across test classes</li>
+              <li>Maintain consistency in test records</li>
+            </ul>
+            <div class="code">@isTest
+public class TestDataFactory {
+  public static Account createAccount(String name) {
+    Account a = new Account(Name=name);
+    insert a;
+    return a;
+  }
+}</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>How do you test @future and async methods? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            Wrap the async call in <code>Test.startTest()</code> / <code>Test.stopTest()</code>. When <code>stopTest()</code> is called, Salesforce forces all async operations in the test to complete synchronously.<br><br>
+            <div class="code">Test.startTest();
+MyFutureClass.doAsyncWork(recordId); // @future call
+Test.stopTest(); // future method executes HERE
+
+// Now assert results
+System.assertEquals(...)</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>How do you test HTTP callouts? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            Salesforce blocks actual HTTP calls during tests. Use the <strong>HttpCalloutMock interface</strong>:<br><br>
+            <div class="code">// 1. Create mock class
+@isTest
+global class MockHttpResponse implements HttpCalloutMock {
+  global HTTPResponse respond(HTTPRequest req) {
+    HttpResponse res = new HttpResponse();
+    res.setBody('{"status":"success"}');
+    res.setStatusCode(200);
+    return res;
+  }
+}
+
+// 2. In test method
+Test.setMock(HttpCalloutMock.class, new MockHttpResponse());
+Test.startTest();
+MyCalloutClass.makeCallout();
+Test.stopTest();</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>What is System.runAs()? Does it enforce FLS? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            <code>System.runAs(user)</code> allows you to run a block of code as a specific user — useful for testing sharing rules and user permissions.<br><br>
+            <div class="code">User u = [SELECT Id FROM User WHERE Username = 'test@test.com'];
+System.runAs(u) {
+  // Code executes as this user
+}</div>
+            <div class="highlight">⚠️ System.runAs() <strong>does NOT enforce field-level security (FLS)</strong> or object-level permissions — it only applies sharing/visibility rules.</div>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-question"><span class="q-icon">Q</span>Why test bulk scenarios (200 records)? <span class="chevron">▼</span></div>
+          <div class="qa-answer">
+            Salesforce triggers receive up to <strong>200 records at once</strong> in a single transaction. If your code isn't bulkified:<br>
+            <ul>
+              <li>SOQL/DML in loops hit governor limits</li>
+              <li>Real data loads will fail silently or throw errors</li>
+            </ul>
+            <div class="code">@isTest
+static void testBulk() {
+  List&lt;Case&gt; cases = new List&lt;Case&gt;();
+  for(Integer i = 0; i < 200; i++) {
+    cases.add(new Case(Subject = 'Test ' + i));
+  }
+  insert cases; // Triggers the trigger with 200 records
+}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FLASHCARDS PANEL -->
+    <div id="panel-flashcards" class="flashcard-panel hidden">
+      <div class="panel-header">
+        <button class="back-btn" onclick="showPanel('home', document.querySelector('[data-panel=home]'))">← Back</button>
+        <h2>🃏 Flashcards</h2>
+      </div>
+      <div id="fcDeck"></div>
+      <p class="fc-hint">Click card to flip • Use arrows to navigate</p>
+      <div class="fc-nav">
+        <button class="fc-btn" onclick="fcPrev()">← Prev</button>
+        <span class="fc-counter" id="fcCounter">1 / 20</span>
+        <button class="fc-btn" onclick="fcNext()">Next →</button>
+      </div>
+    </div>
+
+    <!-- QUIZ PANEL -->
+    <div id="panel-quiz" class="quiz-panel hidden">
+      <div class="panel-header">
+        <button class="back-btn" onclick="showPanel('home', document.querySelector('[data-panel=home]'))">← Back</button>
+        <h2>❓ Mock Quiz</h2>
+      </div>
+      <div id="quizContent"></div>
+    </div>
+
+    <!-- CHEATSHEET PANEL -->
+    <div id="panel-cheatsheet" class="cheat-panel hidden">
+      <div class="panel-header">
+        <button class="back-btn" onclick="showPanel('home', document.querySelector('[data-panel=home]'))">← Back</button>
+        <h2>📋 Quick Cheat Sheet</h2>
+      </div>
+      <div class="cheat-grid">
+        <div class="cheat-card">
+          <h3>🔐 Security Layers (in order)</h3>
+          <div class="cheat-row"><span class="cheat-key">1. OWD</span><span class="cheat-val">Baseline (most restrictive)</span></div>
+          <div class="cheat-row"><span class="cheat-key">2. Role Hierarchy</span><span class="cheat-val">Opens access upward</span></div>
+          <div class="cheat-row"><span class="cheat-key">3. Sharing Rules</span><span class="cheat-val">Extend beyond OWD</span></div>
+          <div class="cheat-row"><span class="cheat-key">4. Manual Sharing</span><span class="cheat-val">Record-by-record</span></div>
+          <div class="cheat-row"><span class="cheat-key">Profile</span><span class="cheat-val">Controls WHAT you can do</span></div>
+          <div class="cheat-row"><span class="cheat-key">Role</span><span class="cheat-val">Controls WHICH records you see</span></div>
+        </div>
+        <div class="cheat-card">
+          <h3>⏱️ Async Apex Limits</h3>
+          <div class="cheat-row"><span class="cheat-key">Future calls / txn</span><span class="cheat-val">50</span></div>
+          <div class="cheat-row"><span class="cheat-key">Queueable chain depth</span><span class="cheat-val">5</span></div>
+          <div class="cheat-row"><span class="cheat-key">Batch default size</span><span class="cheat-val">200 records</span></div>
+          <div class="cheat-row"><span class="cheat-key">Batch max size</span><span class="cheat-val">2,000 records</span></div>
+          <div class="cheat-row"><span class="cheat-key">QueryLocator max</span><span class="cheat-val">50 million records</span></div>
+          <div class="cheat-row"><span class="cheat-key">@future → @future</span><span class="cheat-val">❌ Not allowed</span></div>
+        </div>
+        <div class="cheat-card">
+          <h3>🔄 Trigger Context Variables</h3>
+          <div class="cheat-row"><span class="cheat-key">Trigger.new</span><span class="cheat-val">insert, update, undelete</span></div>
+          <div class="cheat-row"><span class="cheat-key">Trigger.old</span><span class="cheat-val">update, delete</span></div>
+          <div class="cheat-row"><span class="cheat-key">Trigger.newMap</span><span class="cheat-val">update (before+after), after insert</span></div>
+          <div class="cheat-row"><span class="cheat-key">Trigger.oldMap</span><span class="cheat-val">update, delete</span></div>
+          <div class="cheat-row"><span class="cheat-key">Before trigger</span><span class="cheat-val">Modify fields, no extra DML needed</span></div>
+          <div class="cheat-row"><span class="cheat-key">After trigger</span><span class="cheat-val">Record has ID; related record ops</span></div>
+        </div>
+        <div class="cheat-card">
+          <h3>🗃️ Relationships Quick Ref</h3>
+          <div class="cheat-row"><span class="cheat-key">Lookup</span><span class="cheat-val">Loose, optional parent, no rollup</span></div>
+          <div class="cheat-row"><span class="cheat-key">Master-Detail</span><span class="cheat-val">Required parent, cascade delete, rollup</span></div>
+          <div class="cheat-row"><span class="cheat-key">M:M</span><span class="cheat-val">Junction object with 2 M-D fields</span></div>
+          <div class="cheat-row"><span class="cheat-key">Hierarchical</span><span class="cheat-val">Self-lookup on User object only</span></div>
+          <div class="cheat-row"><span class="cheat-key">Rollup functions</span><span class="cheat-val">COUNT, SUM, MIN, MAX</span></div>
+          <div class="cheat-row"><span class="cheat-key">External ID types</span><span class="cheat-val">Text, Number, Email</span></div>
+        </div>
+        <div class="cheat-card">
+          <h3>⚛️ LWC Decorators</h3>
+          <div class="cheat-row"><span class="cheat-key">@api</span><span class="cheat-val">Public prop/method; parent→child</span></div>
+          <div class="cheat-row"><span class="cheat-key">@track</span><span class="cheat-val">Reactive object properties</span></div>
+          <div class="cheat-row"><span class="cheat-key">@wire</span><span class="cheat-val">Reactive data; requires cacheable=true</span></div>
+          <div class="cheat-row"><span class="cheat-key">Child → Parent</span><span class="cheat-val">CustomEvent + dispatchEvent</span></div>
+          <div class="cheat-row"><span class="cheat-key">Unrelated comps</span><span class="cheat-val">Lightning Message Service (LMS)</span></div>
+          <div class="cheat-row"><span class="cheat-key">No Apex CRUD</span><span class="cheat-val">Lightning Data Service (LDS)</span></div>
+        </div>
+        <div class="cheat-card">
+          <h3>📊 Gov Limits to Memorize</h3>
+          <div class="cheat-row"><span class="cheat-key">SOQL per txn</span><span class="cheat-val">100</span></div>
+          <div class="cheat-row"><span class="cheat-key">DML per txn</span><span class="cheat-val">150</span></div>
+          <div class="cheat-row"><span class="cheat-key">Records per DML</span><span class="cheat-val">10,000</span></div>
+          <div class="cheat-row"><span class="cheat-key">Data Import Wizard max</span><span class="cheat-val">50,000 records</span></div>
+          <div class="cheat-row"><span class="cheat-key">Data Loader max</span><span class="cheat-val">5 million records</span></div>
+          <div class="cheat-row"><span class="cheat-key">Dashboard components</span><span class="cheat-val">Max 20</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ——— PANEL NAVIGATION ———
+function showPanel(id, navEl) {
+  document.querySelectorAll('[id^="panel-"]').forEach(p => p.classList.add('hidden'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.remove('hidden');
+  if (navEl) navEl.classList.add('active');
+  if (id === 'flashcards') initFlashcards();
+  if (id === 'quiz') initQuiz();
+}
+
+// ——— QA ACCORDION ———
+let reviewed = new Set();
+function toggleQA(el) {
+  el.classList.toggle('open');
+  reviewed.add(el.querySelector('.qa-question').textContent.substring(0,30));
+  document.getElementById('progressPill').textContent = reviewed.size + ' / 30 Reviewed';
+}
+
+// ——— FLASHCARDS ———
+const flashcards = [
+  { q: "What is OWD in Salesforce?", a: "Organization-Wide Defaults — defines the baseline (most restrictive) access level for records users don't own. Options: Private, Public Read Only, Public Read/Write." },
+  { q: "Lookup vs Master-Detail — key difference?", a: "Lookup is loose: child can exist without parent. Master-Detail is tight: child requires parent, supports rollup summaries, and deleting master deletes all children." },
+  { q: "What are the 4 types of Async Apex?", a: "1. @future — simple, static, void, primitives only. 2. Queueable — complex objects, chainable, job ID. 3. Batch — millions of records, start/execute/finish. 4. Scheduled — cron-based timing." },
+  { q: "Can a @future method call another @future?", a: "No — it's a hard platform limit and causes a runtime exception. Use Queueable chaining instead." },
+  { q: "What is Bulkification?", a: "Writing trigger code to handle 200 records at once efficiently. Never put SOQL or DML inside a for loop. Collect IDs in a Set, do one query outside the loop." },
+  { q: "What are the 3 LWC Decorators?", a: "@api — exposes public property (parent→child). @track — makes object properties reactive. @wire — reactive data service from Apex or Salesforce data." },
+  { q: "LWC Parent → Child communication?", a: "Use @api decorator on child property. Parent sets value in template: <c-child my-value={parentVar}>. Or call an @api method via querySelector." },
+  { q: "LWC Child → Parent communication?", a: "Child dispatches a CustomEvent via dispatchEvent(). Parent listens with oneventname={handlerMethod} in the template." },
+  { q: "What is SeeAllData=false in tests?", a: "The default for test methods. Tests cannot see existing org data — they must create all their own test data. This makes tests reliable and repeatable." },
+  { q: "What is Test.startTest() / stopTest()?", a: "startTest() resets governor limits for code inside the block. stopTest() ends the test context and forces async operations (@future, Queueable) to complete synchronously." },
+  { q: "What is a Junction Object?", a: "An object with two Master-Detail relationships used to create a Many-to-Many relationship between two objects. Example: Student ↔ Course via Enrollment." },
+  { q: "Before trigger vs After trigger?", a: "Before trigger: fires before save; modify Trigger.new directly without DML. After trigger: fires after save; record has ID now; need DML to update same record." },
+  { q: "What is a Roll-Up Summary field?", a: "A field on the master object in a Master-Detail relationship that aggregates child data. Functions: COUNT, SUM, MIN, MAX. Not available on Lookup relationships." },
+  { q: "Role Hierarchy — what does it do?", a: "Users higher in the hierarchy can view and edit records owned by users below them. It opens access upward from OWD restrictions." },
+  { q: "What is Recursive Trigger prevention?", a: "Use a static Boolean variable in a helper class. Set it to true after first execution. Check !hasRun before executing trigger logic to prevent infinite loops." },
+  { q: "LWC Lifecycle hooks in order?", a: "1. constructor() — init props. 2. connectedCallback() — DOM insert, fetch data. 3. renderedCallback() — after each render. 4. disconnectedCallback() — cleanup." },
+  { q: "What is Batch Apex's start/execute/finish?", a: "start() — collect records (returns QueryLocator). execute() — processes each batch of 200; limits reset per batch. finish() — post-processing after all batches complete." },
+  { q: "What is the One Trigger Per Object rule?", a: "Best practice: only one trigger per object, with all logic in a handler class. Multiple triggers have no guaranteed execution order and can conflict." },
+  { q: "What is addError() used for in triggers?", a: "Prevents the record from being saved and shows an error message. In bulk operations, it marks just that record as failed, allowing others to succeed." },
+  { q: "Queueable vs Future — key advantages of Queueable?", a: "Queueable accepts complex objects (sObjects), returns a Job ID for monitoring, supports chaining, and is the recommended modern async pattern." },
+];
+
+let fcIndex = 0;
+let fcFlipped = false;
+
+function initFlashcards() {
+  fcIndex = 0;
+  fcFlipped = false;
+  renderFC();
+}
+
+function renderFC() {
+  const fc = flashcards[fcIndex];
+  document.getElementById('fcDeck').innerHTML = `
+    <div class="fc-container" onclick="flipFC()">
+      <div class="fc-card ${fcFlipped ? 'flipped' : ''}">
+        <div class="fc-front">
+          <div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;">Question</div>
+            <div class="fc-front-text">${fc.q}</div>
+          </div>
+        </div>
+        <div class="fc-back">
+          <div>
+            <div style="font-size:11px;color:var(--accent);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;">Answer</div>
+            <div class="fc-back-text">${fc.a}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('fcCounter').textContent = (fcIndex + 1) + ' / ' + flashcards.length;
+}
+
+function flipFC() {
+  fcFlipped = !fcFlipped;
+  renderFC();
+}
+function fcNext() { fcIndex = (fcIndex + 1) % flashcards.length; fcFlipped = false; renderFC(); }
+function fcPrev() { fcIndex = (fcIndex - 1 + flashcards.length) % flashcards.length; fcFlipped = false; renderFC(); }
+
+// ——— QUIZ ———
+const quizQuestions = [
+  {
+    q: "What happens when a Lead is converted in Salesforce?",
+    options: ["Only an Account is created", "An Account and Contact are created; Opportunity is optional", "A Case and Account are created", "Only a Contact is created"],
+    correct: 1,
+    explain: "Lead conversion creates an Account and a Contact. An Opportunity is optionally created based on the user's choice during conversion."
+  },
+  {
+    q: "Which Async Apex type should you use when you need to process 10 million records?",
+    options: ["@future method", "Queueable Apex", "Batch Apex", "Scheduled Apex"],
+    correct: 2,
+    explain: "Batch Apex is designed for large data volumes. It uses Database.Batchable and QueryLocator can handle up to 50 million records."
+  },
+  {
+    q: "In which trigger events is Trigger.newMap available?",
+    options: ["Before insert only", "After insert and before/after update", "All events including delete", "Before and after update only"],
+    correct: 1,
+    explain: "Trigger.newMap is available in before update, after insert, and after update. It's a Map<Id, SObject> so records must have IDs."
+  },
+  {
+    q: "What is the primary difference between a Lookup and Master-Detail relationship?",
+    options: ["Lookup supports rollup summaries", "Master-Detail child can exist without parent", "Lookup is loosely coupled — child can exist without parent", "Master-Detail doesn't cascade delete"],
+    correct: 2,
+    explain: "Lookup is loosely coupled — the child record can exist without a parent. Master-Detail is strongly coupled — child requires a parent and cascade deletes."
+  },
+  {
+    q: "Which LWC decorator is required to expose a property to a parent component?",
+    options: ["@track", "@wire", "@api", "@AuraEnabled"],
+    correct: 2,
+    explain: "@api makes a property or method public and accessible from a parent component. Without @api, properties are private to the component."
+  },
+  {
+    q: "What does Test.stopTest() do in Apex testing?",
+    options: ["Stops all running tests in the org", "Ends test context and forces async operations to complete", "Resets governor limits", "Rolls back all DML operations"],
+    correct: 1,
+    explain: "Test.stopTest() ends the test context block and forces any asynchronous operations (like @future methods) to complete synchronously before assertions."
+  },
+  {
+    q: "What is OWD used for in Salesforce?",
+    options: ["Defining field-level security", "Setting baseline access to records users don't own", "Controlling login hours", "Managing profile permissions"],
+    correct: 1,
+    explain: "OWD (Organization-Wide Defaults) defines the most restrictive baseline access to records. It determines what access users have to records they don't own."
+  },
+  {
+    q: "Can a @future method call another @future method?",
+    options: ["Yes, up to 5 levels deep", "Yes, with callout=true", "No — it's a hard platform limit", "Only in sandbox"],
+    correct: 2,
+    explain: "No. Calling a @future method from another @future method is a hard platform limit and causes a runtime exception. Use Queueable chaining for sequential async jobs."
+  },
+  {
+    q: "What does cacheable=true do in Apex for LWC @wire?",
+    options: ["Allows DML operations in the method", "Required for @wire; marks method safe for client-side caching", "Disables sharing rules", "Makes the method run asynchronously"],
+    correct: 1,
+    explain: "cacheable=true is required for @wire service. It tells Salesforce the method is read-only and safe to cache on the client side. Omit for imperative calls."
+  },
+  {
+    q: "Which data import tool allows up to 5 million records?",
+    options: ["Data Import Wizard", "Data Loader", "SOQL Builder", "Workbench"],
+    correct: 1,
+    explain: "Data Loader supports up to 5 million records and supports all standard operations including Insert, Update, Upsert, Delete, and Export."
+  },
+  {
+    q: "What is the maximum number of components allowed on a Dashboard?",
+    options: ["10", "15", "20", "25"],
+    correct: 2,
+    explain: "A Dashboard can have a maximum of 20 components. Each component is backed by a report."
+  },
+  {
+    q: "What is a Junction Object used for?",
+    options: ["Extending standard objects", "Creating Many-to-Many relationships", "Storing rollup summary data", "Building approval processes"],
+    correct: 1,
+    explain: "A Junction Object has two Master-Detail relationships to create a Many-to-Many relationship. Example: Student ↔ Course via Enrollment__c."
+  },
+];
+
+let quizIndex = 0;
+let quizScore = 0;
+let quizAnswered = false;
+
+function initQuiz() {
+  quizIndex = 0;
+  quizScore = 0;
+  quizAnswered = false;
+  renderQuiz();
+}
+
+function renderQuiz() {
+  if (quizIndex >= quizQuestions.length) {
+    renderScore();
+    return;
+  }
+  const q = quizQuestions[quizIndex];
+  const pct = (quizIndex / quizQuestions.length * 100).toFixed(0);
+  document.getElementById('quizContent').innerHTML = `
+    <div class="quiz-progress"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:12px;">Question ${quizIndex + 1} of ${quizQuestions.length} • Score: ${quizScore}</div>
+    <div class="quiz-q">${q.q}</div>
+    <div class="quiz-options" id="quizOpts">
+      ${q.options.map((o, i) => `<div class="quiz-opt" onclick="selectAnswer(${i})" id="opt-${i}">
+        <span class="opt-label">${String.fromCharCode(65+i)}</span>${o}
+      </div>`).join('')}
+    </div>
+    <div id="quizFeedback"></div>
+  `;
+}
+
+function selectAnswer(chosen) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const q = quizQuestions[quizIndex];
+  document.querySelectorAll('.quiz-opt').forEach(o => o.classList.add('answered'));
+  document.getElementById('opt-' + chosen).classList.add(chosen === q.correct ? 'correct' : 'wrong');
+  if (chosen !== q.correct) document.getElementById('opt-' + q.correct).classList.add('correct');
+  if (chosen === q.correct) quizScore++;
+  document.getElementById('quizFeedback').innerHTML = `
+    <div class="quiz-explain">💡 ${q.explain}</div>
+    <button class="quiz-next-btn" onclick="nextQuestion()">${quizIndex + 1 < quizQuestions.length ? 'Next Question →' : 'See Results'}</button>
+  `;
+}
+
+function nextQuestion() {
+  quizIndex++;
+  quizAnswered = false;
+  renderQuiz();
+}
+
+function renderScore() {
+  const pct = Math.round(quizScore / quizQuestions.length * 100);
+  const grade = pct >= 80 ? '🏆 Excellent!' : pct >= 60 ? '👍 Good Job!' : '📚 Keep Studying!';
+  document.getElementById('quizContent').innerHTML = `
+    <div class="score-screen">
+      <div class="score-circle">
+        <div class="score-num">${quizScore}</div>
+        <div class="score-denom">/ ${quizQuestions.length}</div>
+      </div>
+      <h2 style="margin-bottom:8px;">${grade}</h2>
+      <p style="color:var(--muted);margin-bottom:24px;">You scored ${pct}% — ${pct >= 75 ? 'above deployment threshold!' : 'below the 75% Salesforce threshold.'}</p>
+      <button class="quiz-next-btn" onclick="initQuiz()">🔄 Try Again</button>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>

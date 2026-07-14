@@ -21,39 +21,30 @@ A **Salesforce-based Community Sustainability Platform** built during my interns
 
 ---
 
-## 📸 Screenshots
-
-> *(Add project screenshots here)*
-
----
-
 ## 🔗 Live Demo
 
-🌐 **Experience Cloud Portal:** *Coming Soon*  
-<!-- Replace with your portal URL if publicly accessible -->
+🌐 **Experience Cloud Portal:** https://orgfarm-fee486e097-dev-ed.develop.my.salesforce-setup.com/servlet/networks/switch?networkId=0DBgK000000ssMn  
 
 ---
 
 ## 📑 Project Documentation
 
-📄 **Project Report:** *(Add Google Drive / PDF Link)*
-
-🎥 **Project Presentation:** *(Optional)*
+📄 **Project Report:**
 
 ---
 
 ## 💼 LinkedIn Project Showcase
 
-🔗 *(Paste your LinkedIn carousel/post URL here)*
+🔗 
 
 ---
 
 ## 👨‍💻 Author
 
-**Vedu**
+**Vedant Waghmare**
 
-📧 Email: your-email@example.com
+📧 Email: vedantw.2004@gmail.com
 
-💼 LinkedIn: https://linkedin.com/in/your-profile
+💼 LinkedIn: https://linkedin.com/in/vedant-waghmare-b4a408298
 
 ⭐ If you found this project interesting, feel free to star the repository!

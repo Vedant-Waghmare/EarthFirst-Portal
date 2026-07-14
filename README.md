@@ -33,12 +33,6 @@ Password: Salesforce@123
 
 ---
 
-## 📑 Project Documentation
-
-📄 **Project Report:**
-
----
-
 ## 💼 LinkedIn Project Showcase
 
 🔗 

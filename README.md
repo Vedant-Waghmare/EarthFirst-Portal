@@ -23,7 +23,7 @@ A **Salesforce-based Community Sustainability Platform** built during my interns
 
 ## 🔗 Live Demo
 
-🌐 **Experience Cloud Portal:** https://orgfarm-fee486e097-dev-ed.develop.my.salesforce-setup.com/servlet/networks/switch?networkId=0DBgK000000ssMn  
+🌐 **Experience Cloud Portal:** https://orgfarm-fee486e097-dev-ed.develop.my.site.com/s/  
 
 ---
 
